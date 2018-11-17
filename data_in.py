@@ -16,7 +16,19 @@ class Story:
 # get_urls() returns a list of all stories listed at a UDK search url.
 # example url: http://www.kansan.com/search/?f=html&s=start_time&sd=asc&l=10&t=article&nsa=eedition
 # passing this url will return a list of the first 10 stories on the UDK website.
-def get_urls(search_url):
+
+#public
+
+# get_stories() returns a list of story objects for each story listed at the search_url
+def get_stories(search_url):
+    search_stories = list()
+    for art in _get_urls(search_url):
+        search_stories.append(_parse_article(art))
+    return search_stories
+
+
+#private
+def _get_urls(search_url):
     source = requests.get(search_url).text
     soup = BeautifulSoup(source, 'lxml')
     articles = soup.find_all('h3', class_='tnt-headline')
@@ -29,7 +41,7 @@ def get_urls(search_url):
 
 # parse_article() parses a story url and returns a story object.
 # example url: http://www.kansan.com/news/travel-web-sites-save-money/article_21523515-484f-571a-9bbd-a8f938c8e597.html
-def parse_article(article_url):
+def _parse_article(article_url):
     source = requests.get(article_url).text
     soup = BeautifulSoup(source, 'lxml')
     article = soup.find('article')
@@ -47,6 +59,6 @@ def parse_article(article_url):
     for p in paragraphs:#These paragraphs contain links to urls. TODO: Ensure these links display properly on mobile.
         article_body += (p.text + '\n\n')
     article_body = article_body[:-2]#remove final endlines
-    
+
     images = None#NOTE: In current testing there are no images present. Image checking/storage needs to be implemented as well.
     return(Story(headline, author, date, images, article_body))
