@@ -78,8 +78,8 @@ def _article_to_story(article_url):
         article_body += (p.text + '\n\n')
     article_body = article_body[:-2]#remove final endlines
 
-    images = None#NOTE: In current testing there are no images present. Image checking/storage needs to be implemented as well.
-    return Story(headline, author, date, images, article_body)
+    images = None# NOTE: In current testing there are no images present. Image checking/storage needs to be implemented as well.
+    return(Story(headline, author, date, images, article_body))
 
 # _get_next_results_url() determines what the url should be for the next set
 # of results
