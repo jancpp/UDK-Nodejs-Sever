@@ -9,6 +9,15 @@ class Story:
         self.image_urls = image_urls
         self.body = body
 
+    def __str__(self):
+        s = ""
+        s += "\nHeadline:\t" + str(self.headline)
+        s += "\nAuthor:\t" + str(self.author)
+        s += "\nDate:\t" + str(self.date)
+        s += "\nImages:\t" + str(self.image_urls)
+        s += "\nBody:\t" + str(self.body)
+        return s
+
 
 # get_urls() returns a list of all stories listed at a UDK search url.
 # example url: http://www.kansan.com/search/?f=html&s=start_time&sd=asc&l=10&t=article&nsa=eedition
