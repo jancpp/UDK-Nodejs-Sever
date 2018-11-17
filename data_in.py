@@ -9,18 +9,24 @@ class Story:
         self.image_urls = image_urls
         self.body = body
 
+    def __str__(self):
+        s = ""
+        s += "\nHeadline:\t" + str(self.headline)
+        s += "\nAuthor:\t" + str(self.author)
+        s += "\nDate:\t" + str(self.date)
+        s += "\nImages:\t" + str(self.image_urls)
+        s += "\nBody:\t" + str(self.body)
+        return s
 
-# get_urls() returns a list of all stories listed at a UDK search url.
-# example url: http://www.kansan.com/search/?f=html&s=start_time&sd=asc&l=10&t=article&nsa=eedition
-# passing this url will return a list of the first 10 stories on the UDK website.
-
-#public
-
-# get_story() returns a story object for a single given UDK article url
+# return: Story object containing article at url
+# params: String url to article page
+# effect: none
 def get_story(article_url):
     return(_article_to_story(article_url))
 
-# get_stories() returns a list of story objects for each story listed at the search_url
+# return: List of Story objects found by rss search page
+# params: String url to search page
+# effect: none
 def get_stories(search_url):
     search_stories = list()
     for art in _get_urls(search_url):
@@ -30,8 +36,9 @@ def get_stories(search_url):
 
 #private
 
-# _get_urls() parses a UDK search page url and returns a list of
-# article urls.
+# return: List of String article urls
+# params: String url for search page
+# effect: none
 def _get_urls(search_url):
     source = requests.get(search_url).text
     soup = BeautifulSoup(source, 'lxml')
@@ -47,8 +54,9 @@ def _get_urls(search_url):
     print(next_results_url)
     return article_urls
 
-# parse_article() parses a story url and returns a story object.
-# example url: http://www.kansan.com/news/travel-web-sites-save-money/article_21523515-484f-571a-9bbd-a8f938c8e597.html
+# return: Story object from parsed article
+# params: String url for article page
+# effect: none
 def _article_to_story(article_url):
     source = requests.get(article_url).text
     soup = BeautifulSoup(source, 'lxml')
