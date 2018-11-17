@@ -19,11 +19,15 @@ class Story:
 
 #public
 
+# get_story() returns a story object for a single given UDK article url
+def get_story(article_url):
+    return(_article_to_story(article_url))
+
 # get_stories() returns a list of story objects for each story listed at the search_url
 def get_stories(search_url):
     search_stories = list()
     for art in _get_urls(search_url):
-        search_stories.append(_parse_article(art))
+        search_stories.append(_article_to_story(art))
     return search_stories
 
 
@@ -41,7 +45,7 @@ def _get_urls(search_url):
 
 # parse_article() parses a story url and returns a story object.
 # example url: http://www.kansan.com/news/travel-web-sites-save-money/article_21523515-484f-571a-9bbd-a8f938c8e597.html
-def _parse_article(article_url):
+def _article_to_story(article_url):
     source = requests.get(article_url).text
     soup = BeautifulSoup(source, 'lxml')
     article = soup.find('article')
