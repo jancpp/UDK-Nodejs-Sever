@@ -1,8 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
 
-
-#Goal: return a story object.
 class Story:
     def __init__(self, headline, author, date, image_urls, body):#allow for more images later
         self.headline = headline
@@ -10,7 +8,6 @@ class Story:
         self.date = date
         self.image_urls = image_urls
         self.body = body
-
 
 
 # get_urls() returns a list of all stories listed at a UDK search url.
@@ -32,6 +29,9 @@ def get_stories(search_url):
 
 
 #private
+
+# _get_urls() parses a UDK search page url and returns a list of
+# article urls.
 def _get_urls(search_url):
     source = requests.get(search_url).text
     soup = BeautifulSoup(source, 'lxml')
