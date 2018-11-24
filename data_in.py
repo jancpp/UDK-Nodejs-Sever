@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 
+
 class Story:
     def __init__(self, headline, author, date, image_urls, body):#allow for more images later
         self.headline = headline
@@ -25,7 +26,7 @@ def get_story(article_url):
     return(_article_to_story(article_url))
 
 # return: List of Story objects found by rss search page
-# params: String url to search page
+# params: String url to search results page
 # effect: none
 def get_stories(search_url):
     search_stories = list()
@@ -37,10 +38,13 @@ def get_stories(search_url):
 #private
 
 # return: List of String article urls
-# params: String url for search page
+# params: String url for search results page
 # effect: none
 def _get_urls(search_url):
+    print('GET Request Sent!')
     source = requests.get(search_url).text
+    print('GET Request Complete!')
+    #print('in _get_urls()')
     soup = BeautifulSoup(source, 'lxml')
     articles = soup.find_all('h3', class_='tnt-headline')
     article_urls = list()
@@ -75,19 +79,23 @@ def _article_to_story(article_url):
 
     # These paragraphs contain links to urls. TODO: Ensure these links display properly on mobile.
     for p in paragraphs:
-        article_body += (p.text + '\n\n')
+        if(p.span):
+            article_body += p.span.text
+        else:
+            article_body += (p.text + '\n\n')
     article_body = article_body[:-2]#remove final endlines
 
     images = None# NOTE: In current testing there are no images present. Image checking/storage needs to be implemented as well.
     return(Story(headline, author, date, images, article_body))
 
-# _get_next_results_url() determines what the url should be for the next set
-# of results
-def _get_next_results_url(results_url):
+# return: String url for the next search results page
+# params: String url for the current search results page
+# effect: none
+def _get_next_results_url(results_url, increment):
     # this substring appears in all urls after the initial one
     if('&app%5B0%5D=editorial' not in results_url):
         # after that the only difference is the final number
-        return results_url + '&app%5B0%5D=editorial&o=10'
+        return results_url + '&app%5B0%5D=editorial&o=' + str(increment)
     else:
         # increment final number
         # find the '='
@@ -103,9 +111,30 @@ def _get_next_results_url(results_url):
         while index != 0:
             num += (results_url[index])
             index += 1
-        num = str(int(num) + 10)#increment it
-
+        num = str(int(num) + increment)#increment it
         # rewrite that portion of the string.
         results_url = results_url[:firstindex]# slice off the number
         results_url += num# add the new one
         return(results_url)
+
+def get_all_story_urls(initial_search_results_url):
+    count = 0
+    url = initial_search_results_url
+    urls = _get_urls(url)
+    filename = 1
+    with open('url_list.txt', 'a') as f:
+        while len(urls) > 0:
+            count += len(urls)
+            for _url in urls:
+                f.write(_url + ', ')
+            f.write('\n')
+            next_results_url = _get_next_results_url(url, 100)
+            url = next_results_url
+            urls = _get_urls(next_results_url)
+            if count % 100 == 0:
+                print('Recorded ' + str(count) + ' urls...')
+            if count % 4000 == 0:
+                f.close()
+                f = open('url_list' + str(filename) + '.txt', 'a')
+                print('Switched to file url_list' + str(filename) + '.txt')
+                filename += 1
