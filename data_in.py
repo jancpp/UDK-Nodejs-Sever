@@ -52,10 +52,6 @@ def _get_urls(search_url):
         art_url = art.find('a')['href']
         story_url = 'http://www.kansan.com' + art_url
         article_urls.append(story_url)
-    # get next results url
-    button_soup = soup.find('div', class_='pagination-container')
-    next_results_url = _get_next_results_url(button_soup)
-    print(next_results_url)
     return article_urls
 
 # return: Story object from parsed article
