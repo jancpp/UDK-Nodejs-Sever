@@ -3,7 +3,7 @@ import requests
 
 
 class Story:
-    def __init__(self, headline, author, date, image_urls, body):#allow for more images later
+    def __init__(self, headline, author, date, image_urls, body):
         self.headline = headline
         self.author = author
         self.date = date
@@ -35,7 +35,7 @@ def get_stories(search_url):
     return search_stories
 
 
-#private
+######################################################## private
 
 # return: List of String article urls
 # params: String url for search results page
@@ -57,32 +57,58 @@ def _get_urls(search_url):
 # return: Story object from parsed article
 # params: String url for article page
 # effect: none
+# throws: error if can't parse story correctly
 def _article_to_story(article_url):
     source = requests.get(article_url).text
     soup = BeautifulSoup(source, 'lxml')
     article = soup.find('article')
    
-    headline_area = article.find('header', class_='asset-header')
-    temp_headline = headline_area.find('h1', itemprop='headline').text
-    # headline is a span. remove redundant whitespace
-    headline = "".join(line.strip() for line in temp_headline.split('\n'))
-    author = headline_area.find('span', itemprop='author').text
-    date = headline_area.find('time').text
+    # put try catch around each of these? so we can determine where exactly it failed
+    headline = _get_headline(article)
+    author = _get_author(article)
+    date = _get_date(article)
 
-    article_body = article.find('div', itemprop='articleBody')
-    paragraphs = article_body.find_all('p')
-    article_body = str()
+    # get article body
+    # body = _get_body(article)
+    paragraphs = article.find('div', itemprop='articleBody').find_all('p')
+    article_body = ""
 
-    # These paragraphs contain links to urls. TODO: Ensure these links display properly on mobile.
+    # These paragraphs contain links to articles. TODO: Ensure these links display properly on mobile.
+    # Need to retain seperation of paragraphs somehow. Put a character between them? So we can format them correctly on mobile.
     for p in paragraphs:
         if(p.span):
             article_body += p.span.text
         else:
             article_body += (p.text + '\n\n')
-    article_body = article_body[:-2]#remove final endlines
-
-    images = None# NOTE: In current testing there are no images present. Image checking/storage needs to be implemented as well.
+    
+    #remove final endlines
+    article_body = article_body[:-2]
+    
+    # In current testing there are no images present. Image checking/storage needs to be implemented as well.
+    images = None
+    
     return(Story(headline, author, date, images, article_body))
+
+
+# maybe put this story parsing stuff in it's own module?
+def _get_headline(article):
+    headline_area = article.find('header', class_='asset-header')
+    temp_headline = headline_area.find('h1', itemprop='headline').text
+    headline = "".join(line.strip() for line in temp_headline.split('\n'))
+    return headline
+
+def _get_author(article):
+    author = article.find('header', class_='asset-header').find('span', itemprop='author').text
+    return author
+
+def _get_date(article):
+    date = article.find('header', class_='asset-header').find('time').text
+    return date
+
+
+
+
+
 
 # return: String url for the next search results page
 # params: String url for the current search results page
