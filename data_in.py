@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 
 class Story:
-    def __init__(self, headline, author, date, image_urls, body):#allow for more images later
+    def __init__(self, headline, author, date, image_urls, body):
         self.headline = headline
         self.author = author
         self.date = date
@@ -18,15 +18,13 @@ class Story:
         s += "\nBody:\t" + str(self.body)
         return s
 
-# return: Story object containing article at url
 # params: String url to article page
-# effect: none
+# return: Story object containing article info at url
 def get_story(article_url):
     return(_article_to_story(article_url))
 
-# return: List of Story objects found by rss search page
 # params: String url to search page
-# effect: none
+# return: List of Story objects found by rss search page
 def get_stories(search_url):
     search_stories = list()
     for art in _get_urls(search_url):
@@ -36,9 +34,8 @@ def get_stories(search_url):
 
 #private
 
-# return: List of String article urls
 # params: String url for search page
-# effect: none
+# return: List of String article urls
 def _get_urls(search_url):
     source = requests.get(search_url).text
     soup = BeautifulSoup(source, 'lxml')
@@ -54,9 +51,8 @@ def _get_urls(search_url):
     print(next_results_url)
     return article_urls
 
-# return: Story object from parsed article
 # params: String url for article page
-# effect: none
+# return: Story from parsed article
 def _article_to_story(article_url):
     source = requests.get(article_url).text
     soup = BeautifulSoup(source, 'lxml')
@@ -81,8 +77,9 @@ def _article_to_story(article_url):
     images = None# NOTE: In current testing there are no images present. Image checking/storage needs to be implemented as well.
     return(Story(headline, author, date, images, article_body))
 
-# _get_next_results_url() determines what the url should be for the next set
-# of results
+
+# return: The url corresponding to clicking the "next" button on the search results page
+# params: String url for next search results page
 def _get_next_results_url(results_url):
     # this substring appears in all urls after the initial one
     if('&app%5B0%5D=editorial' not in results_url):
