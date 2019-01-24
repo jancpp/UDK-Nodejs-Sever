@@ -1,10 +1,14 @@
 # UDK Server Scripts
 
-+ data_in.py
-  - A module meant for retrieving and parsing article data hosted by the UDK's website.
-+ testme
-  - A python script that tests the data_in.py module
-
-
-### Usage
-`python testme`
+## Project Index
++ README.md
+    - this file
++ requirements.txt
+    - python packages required for this project
++ src
+    - data_in.py
+        + A python module for retrieving and parsing article data hosted by the UDK's website.
+    - store.py
+        + A python module to store articles in our server-side database for later retrieval
++ docs
+    - Documentation of the project (empty right now, so it is invisible on github)
