@@ -18,13 +18,13 @@ class Story:
         s += "\nBody:\t" + str(self.body)
         return s
 
-# params: String url to article page
-# return: Story object containing article info at url
+# params: <String> url of article
+# return: <Story> object containing article info at url
 def get_story(article_url):
     return(_article_to_story(article_url))
 
-# params: String url to search page
-# return: List of Story objects found by rss search page
+# params: <String> url of search page
+# return: <List<Story>> results of rss search
 def get_stories(search_url):
     search_stories = list()
     for art in _get_urls(search_url):
@@ -34,8 +34,8 @@ def get_stories(search_url):
 
 #private
 
-# params: String url for search page
-# return: List of String article urls
+# params: <String> url of search page
+# return: <List<String>> article urls
 def _get_urls(search_url):
     source = requests.get(search_url).text
     soup = BeautifulSoup(source, 'lxml')
@@ -51,8 +51,8 @@ def _get_urls(search_url):
     print(next_results_url)
     return article_urls
 
-# params: String url for article page
-# return: Story from parsed article
+# params: <String> url of article
+# return: <Story> parsed article
 def _article_to_story(article_url):
     source = requests.get(article_url).text
     soup = BeautifulSoup(source, 'lxml')
@@ -78,8 +78,8 @@ def _article_to_story(article_url):
     return(Story(headline, author, date, images, article_body))
 
 
-# return: The url corresponding to clicking the "next" button on the search results page
-# params: String url for next search results page
+# return: <String> search results url
+# params: <String> "incremented" search results url
 def _get_next_results_url(results_url):
     # this substring appears in all urls after the initial one
     if('&app%5B0%5D=editorial' not in results_url):
