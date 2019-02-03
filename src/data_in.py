@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 
 class Story:
+
+    #constructor
     def __init__(self, headline, author, date, image_urls, body):
         self.headline = headline
         self.author = author
@@ -15,6 +17,7 @@ class Story:
         s += "\nAuthor:\t" + str(self.author)
         s += "\nDate:\t" + str(self.date)
         s += "\nImages:\t" + str(self.image_urls)
+        # s += "\nBody:\t" + str( [(p+'\n') for p in self.body] ) <-- eventually have to iterate?
         s += "\nBody:\t" + str(self.body)
         return s
 
@@ -32,7 +35,7 @@ def get_stories(search_url):
     return search_stories
 
 
-#private
+#_private
 
 # params: <String> url of search page
 # return: <List<String>> article urls
@@ -78,8 +81,8 @@ def _article_to_story(article_url):
     return(Story(headline, author, date, images, article_body))
 
 
-# return: <String> search results url
-# params: <String> "incremented" search results url
+# params: <String> search results url
+# return: <String> "incremented" search results url
 def _get_next_results_url(results_url):
     # this substring appears in all urls after the initial one
     if('&app%5B0%5D=editorial' not in results_url):
