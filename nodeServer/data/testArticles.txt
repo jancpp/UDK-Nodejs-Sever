@@ -1,0 +1,4 @@
+
+    id: '001',
+    title: 'Gallery: Men's Basketball vs. Tennessee (Brooklyn, New York)',
+    url: 'http://www.kansan.com/gallery/gallery-men-s-basketball-vs-tennessee-brooklyn-new-york/collection_e5303a08-efb4-11e8-8a8d-cf0e03a7b561.html'
