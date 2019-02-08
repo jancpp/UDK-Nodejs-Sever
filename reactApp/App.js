@@ -1,46 +1,70 @@
 // app.js
-// to setup environment: 'npm install'
+// firsr run: 'npm install' should install all dependecies
 // to run: 'expo start'
 
 
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TextInput, Linking } from 'react-native';
+import { Image, FlatList, ScrollView, Text, View, WebView, StyleSheet, TextInput, Linking } from 'react-native';
 import io from "socket.io-client";
-import { getArticles } from './services/FetchArticles';
+// import { getArticles } from './services/FetchArticles';
+const SERVERIP = '192.168.2.189';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       message: "",
-      articles: []
+      messages: []
     };
   }
 
   componentDidMount() {
-    this.socket = io("http://10.104.135.50:3000"); //use ifconfig for your ip
-    this.socket.on("requestArticles", msg => {
-      this.setState({ articles: [...this.state.articles, msg] });
+    // listen for socket connection
+    this.socket = io('http://' + SERVERIP + ':4000'); //use ifconfig for your ip
+    this.socket.on("requestMessages", msg => {
+      this.setState({ messages: [...this.state.messages, msg] });
     });
+
+    // fetch from our remote server on port 3000 and break down the json we get back
+    return fetch('http://' + SERVERIP + ':3000/api').then((response) => response.json()).then((list) => {
+      // once the fetch resolves, run the code here
+      // console.log(list);
+
+      // not loading anymore, and we have some new data, the list of card objects we got from the json
+      this.setState(
+        { loading: false, cards: list },
+        function () { }
+      );
+
+    }).catch((error) => {
+      console.log(error);
+    }
+    );
+
   }
 
   submitMessage() {
-    this.socket.emit("requestArticles", this.state.message);
+    this.socket.emit("requestMessages", this.state.message);
     this.setState({ message: "" });
   }
 
   render() {
-    const articles = this.state.articles.map(message => (
+
+    const messages = this.state.messages.map(message => (
       <Text key={message}>{message}</Text> // TODO: each key should be unique (first {message})
     ));
     return (
-      <View style={{ flex: 1 }}>
-        <View style={{ flex: 1, backgroundColor: 'steelblue' }} />
-        <View style={{ flex: 1, backgroundColor: 'powderblue', padding: 10 }}>
-          <Text style={styles.bigBlueFont}>UDK</Text>
-        </View>
+      <View>
+        <View style={styles.flatview}>
+        <Image source={{ uri: "https://bloximages.chicago2.vip.townnews.com/kansan.com/content/tncms/custom/image/74017260-28ae-11e9-ad8e-bb81b20d5180.jpg", height: 64 }} />
         
-        <View style={{ flex: 5, backgroundColor: 'steelblue' }} >
+        <FlatList
+          data={this.state.cards}
+          renderItem={function ({ item }) { return (<Text style={styles.card}>{item.url}</Text>); }}
+          // renderItem={function ({ item }) { return (<Text>{Linking.openURL(item.url)}</Text>); }}
+        />
+        </View>
+        <View style={styles.messages} >
           <TextInput
             style={{ height: 40, borderWidth: 2, backgroundColor: 'white' }}
             autoCorrect={false}
@@ -50,20 +74,26 @@ export default class App extends Component {
               this.setState({ message });
             }}
           />
-          {articles}
+          {messages}
         </View>
       </View>
     );
   }
-
 }
 
 const styles = StyleSheet.create({
-  bigBlueFont: {
-    color: 'steelblue',
-    fontWeight: 'bold',
-    fontSize: 30,
+  flatview: {
+  }, 
+  card: {
+    marginTop: 2,
+    backgroundColor: '#16367F',
+    textAlign: 'center',
+    fontSize: 20,
+    color: 'white',
+  },
+  messages: {
+    
+    backgroundColor: '#16367F',
   }
 });
-
 
