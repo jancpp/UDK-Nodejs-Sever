@@ -1,7 +1,10 @@
-# requestData
+# nodeServer
 
-to run:
-node app
+first run:
+npm install
+
+then:
+nodmon server.js or node server.js
 
 
 

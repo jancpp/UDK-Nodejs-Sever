@@ -4,7 +4,7 @@
 
 
 import React, { Component } from 'react';
-import { Image, FlatList, ScrollView, Text, View, WebView, StyleSheet, TextInput, Linking } from 'react-native';
+import { Image, FlatList, TouchableHighlight, Text, View, StyleSheet, TextInput, Linking } from 'react-native';
 import io from "socket.io-client";
 // import { getArticles } from './services/FetchArticles';
 const SERVERIP = '192.168.2.189';
@@ -54,13 +54,16 @@ export default class App extends Component {
       <Text key={message}>{message}</Text> // TODO: each key should be unique (first {message})
     ));
     return (
-      <View>
+      <View style={styles.page}>
         <View style={styles.flatview}>
         <Image source={{ uri: "https://bloximages.chicago2.vip.townnews.com/kansan.com/content/tncms/custom/image/74017260-28ae-11e9-ad8e-bb81b20d5180.jpg", height: 64 }} />
         
         <FlatList
           data={this.state.cards}
-          renderItem={function ({ item }) { return (<Text style={styles.card}>{item.url}</Text>); }}
+          renderItem={function ({ item }) { return (
+
+            <Text style={styles.card}>{item.url}</Text>
+              ); }}
           // renderItem={function ({ item }) { return (<Text>{Linking.openURL(item.url)}</Text>); }}
         />
         </View>
@@ -82,18 +85,28 @@ export default class App extends Component {
 }
 
 const styles = StyleSheet.create({
+  page: {
+    flex: 1, 
+    marginTop: 40,
+  },
   flatview: {
+    flex: 8,
   }, 
   card: {
     marginTop: 2,
     backgroundColor: '#16367F',
-    textAlign: 'center',
-    fontSize: 20,
+    textAlign: 'left',
+    fontSize: 18,
     color: 'white',
+    padding: 8,
   },
   messages: {
-    
-    backgroundColor: '#16367F',
+    flex: 1,
+    backgroundColor: 'steelblue',
   }
 });
+
+
+
+
 
