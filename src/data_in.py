@@ -20,16 +20,15 @@ class Story:
     def __str__(self):
         s = ""
         s += "\nUrl:\t" + self.url
+
         if(self.main_image is not None):
             s += "\nMain_Image:\n" + self.main_image
 
         s += "\nHeadline:\t" + self.headline
         s += "\nAuthor:\t" + self.author
         s += "\nDate:\t" + self.date
-        s += "\nBody:\t"
-        for elem in self.body:
-            s += elem
-            s += '\n'
+        s += "\nBody:\t" + self.body
+
         return s
 
 # params: <String> url of article
@@ -77,14 +76,18 @@ def _article_to_story(article_url):
     soup = BeautifulSoup(source, 'lxml')
     article = soup.find('article')
 
-    main_image = _mine_main_image(article)
+    # required
     headline = _mine_headline(article)
     author = _mine_author(article)
     date = _mine_date(article)
+
+    # optional
+    main_image = _mine_main_image(article)
     body = _mine_body(article)
 
     s = Story(article_url, main_image, headline, author, date, body)
     print('STORY:\n', s, 'END STORY\n\n')
+
     return(s)
 
 def _mine_main_image(article):
@@ -117,17 +120,25 @@ def _mine_body(article):
         if child.name == 'p':
             ptext = '$$$PARAGRAPH$$$' + child.text
             body.append(ptext)
+
         elif child.name == 'aside':
             atext = '$$$ASIDE$$$' + child.text
             body.append(atext)
-        elif child.name == 'div' and 'inline-image' in child['class']:
-            # TODO: Get the byline of the image, but how to store??
+
+        elif (child.name == 'div') and ('inline-image' in child['class']):
+            # TODO: Get the byline of the image, but how to store?? as a double?
             imgsrc = '$$$IMAGE$$$' + child.find('meta', itemprop='contentUrl')['content']
             body.append(imgsrc)
+
         else:
             print("UNMATCHED ELEMENT IN ARTICLE BODY", child)
 
-    return body
+    b = ""
+    for body_elem in body:
+        b += body_elem
+    return b
+
+    
 # params: <String> search results url
 # return: <String> "incremented" search results url
 def _get_next_results_url(results_url):
