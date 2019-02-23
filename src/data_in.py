@@ -1,6 +1,13 @@
 from bs4 import BeautifulSoup
 import requests
 
+def escape(s):
+    ILLEGAL = ['\'', '\"']
+    for i,c in enumerate(s):
+        if c in ILLEGAL:
+            s = s[:i] + '\\' + s[i:]
+    return s
+
 class Story:
 
     #constructor
@@ -87,11 +94,7 @@ def _article_to_story(article_url):
     main_image, img_byline = _mine_main_image(article)
     body = _mine_body(article)
 
-    s = Story(article_url, main_image, img_byline, headline, author, date, body)
-    print('STORY:\n', s, 'END STORY\n\n')
-    print('Main img URL: ', main_image)
-    print('Main img byline: ' + img_byline)
-    print('BODY: ', body)
+    s = Story(escape(article_url), escape(main_image), escape(img_byline), escape(headline), escape(author), date, escape(body))
 
     return(s)
 
@@ -147,6 +150,7 @@ def _mine_body(article):
     b = ""
     for body_elem in body:
         b += body_elem
+        
     return b
 
     
@@ -178,4 +182,3 @@ def _get_next_results_url(results_url):
         results_url = results_url[:firstindex]# slice off the number
         results_url += num# add the new one
         return(results_url)
-

@@ -9,9 +9,12 @@ TEST_ARTICLE_NEW = 'http://www.kansan.com/sports/ku-track-and-field-splits-up-fo
 def run_tests():
     res = run_search_page_test()
     print('''\n\n\n---------------SEARCH PAGE TEST COMPLETED SUCCESSFULLY-------------------\n\n\n''')
+
     run_article_breakdown_test()
     print('''\n\n\n---------------ARTICLE BREAKDOWN  TEST COMPLETED SUCCESSFULLY-------------------\n\n\n''')
+
     #run_article_store_test()
+    
     insert_test(res)
     print('''\n\n\n---------------INSERT TEST COMPLETED SUCCESSFULLY-------------------\n\n\n''')
 
