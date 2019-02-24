@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 import requests
 
 def escape(s):
+    if s is None:
+        return None
     ILLEGAL = ['\'', '\"']
     for i,c in enumerate(s):
         if c in ILLEGAL:
@@ -83,7 +85,7 @@ def _article_to_story(article_url):
     soup = BeautifulSoup(source, 'lxml')
     article = soup.find('article')
     
-    print("mining story ", article_url)
+    #print("mining story ", article_url)
 
     # required
     headline = _mine_headline(article)
@@ -100,11 +102,12 @@ def _article_to_story(article_url):
 
 def _mine_main_image(article):
     img = article.find('div', id='asset-photo')
-    img_byline = img.find('figcaption', class_='caption').find('p').text
+    
 
     if(img is None):
-        return None
+        return None, None
     else:
+        img_byline = img.find('figcaption', class_='caption').find('p').text
         return img.find('meta', itemprop='contentUrl')['content'], img_byline
      
 
