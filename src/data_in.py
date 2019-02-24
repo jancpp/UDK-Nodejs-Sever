@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import datetime
 
 def escape(s):
     ILLEGAL = ['\'', '\"']
@@ -118,9 +119,14 @@ def _mine_author(article):
     author = headline_area.find('span', itemprop='author').text
     return author
 
+def breakdown_date_text(text):
+    return text[:4], text[5:7], text[8:10]
+
 def _mine_date(article):
     headline_area = article.find('header', class_='asset-header')
-    date = headline_area.find('time').text
+    text = headline_area.find('div', class_='meta').find('meta', itemprop='datePublished').content
+    year, month, day = breakdown_date_text(text)
+    date = datetime.date(year, month, day)
     return date
 
 def _mine_body(article):
