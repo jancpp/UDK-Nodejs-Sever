@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import datetime
 
 def escape(s):
     if s is None:
@@ -101,14 +102,23 @@ def _article_to_story(article_url):
     return(s)
 
 def _mine_main_image(article):
-    img = article.find('div', id='asset-photo')
+    img_area = article.find('div', id='asset-photo')
     
+    if(img_area is None):
+        return None, None
+
+    img = img_area.find('meta', itemprop='contentUrl')['content']
 
     if(img is None):
         return None, None
+
+    img_byline = img_area.find('figcaption', class_='caption').find('p').text
+
+    if(img_byline is None):
+        return img, None
+
     else:
-        img_byline = img.find('figcaption', class_='caption').find('p').text
-        return img.find('meta', itemprop='contentUrl')['content'], img_byline
+        return img, img_byline
      
 
 def _mine_headline(article):
@@ -121,9 +131,15 @@ def _mine_author(article):
     author = headline_area.find('span', itemprop='author').text
     return author
 
+def breakdown_date_text(text):
+    return text[:4], text[5:7], text[8:10]
+
 def _mine_date(article):
     headline_area = article.find('header', class_='asset-header')
-    date = headline_area.find('time').text
+    text = headline_area.find('meta', itemprop='datePublished')['content']
+    year, month, day = breakdown_date_text(text)
+    print(year, month, day)
+    date = datetime.date(int(year), int(month), int(day))
     return date
 
 def _mine_body(article):
