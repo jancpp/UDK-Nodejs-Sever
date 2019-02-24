@@ -100,13 +100,23 @@ def _article_to_story(article_url):
     return(s)
 
 def _mine_main_image(article):
-    img = article.find('div', id='asset-photo')
-    img_byline = img.find('figcaption', class_='caption').find('p').text
+    img_area = article.find('div', id='asset-photo')
+    
+    if(img_area is None):
+        return None, None
+
+    img = img_area.find('meta', itemprop='contentUrl')['content']
 
     if(img is None):
-        return None
+        return None, None
+
+    img_byline = img_area.find('figcaption', class_='caption').find('p').text
+
+    if(img_byline is None):
+        return img, None
+
     else:
-        return img.find('meta', itemprop='contentUrl')['content'], img_byline
+        return img, img_byline
      
 
 def _mine_headline(article):
@@ -124,9 +134,10 @@ def breakdown_date_text(text):
 
 def _mine_date(article):
     headline_area = article.find('header', class_='asset-header')
-    text = headline_area.find('div', class_='meta').find('meta', itemprop='datePublished').content
+    text = headline_area.find('meta', itemprop='datePublished')['content']
     year, month, day = breakdown_date_text(text)
-    date = datetime.date(year, month, day)
+    print(year, month, day)
+    date = datetime.date(int(year), int(month), int(day))
     return date
 
 def _mine_body(article):
