@@ -1,43 +1,135 @@
 // server.js
 // start server: 'nodemon server' or 'node server'
-// if already running: 'lsof -i tcp:3000' then 'Kill - 9 PID' then try again
 
+const PORT = 3001; // to change port (export PORT=1234)
+const ip = require('ip');
+const IPADDRESS = ip.address();
 const express = require('express');
 const app = express();
-const fs = require('fs');
-const ip = require('ip');
-const server = require("http").createServer(app);
-const PORT = process.env.PORT || 3000; // port 3000 unless specified (export PORT=1234)
-const IPADDRESS = ip.address();
+const bodyParser = require('body-parser');
+const Database = require('./db/Database');
+const database = new Database(); 
+const http = require('http');
+// const api = express();
+const api = require('./routes/routes');
 
-// get first 10 articles from the url_list1.txt file and display on server
-// check at http://localhost:3000/api
-  app.get('/api/', (req, res) => {
 
-    var articles = [];
-    fs.readFile(__dirname + "/data/url_list1.txt", function (err, buffer) {
+class Server {
+    constructor() {
+        this.initDB();
+        this.initBodyParser();
+        this.initRoutes();
+        this.start();
+    }
 
-      if (err) throw err;
-      var data = buffer.toString();
-
-      // get for array of count articles (10)
-      var urls = data.split(", ");
-      let count = urls.length;
-      if (count > 10) {
-        count = 10;
-      };
-      for (var i = 0; i < count; i++ ) {
-        articles.push({
-          id: i + 1,
-          url: urls[i]
+    start(){
+        
+        var server = http.createServer(app);
+        server.listen(PORT, IPADDRESS, () => {
+            console.log(`server running at 'http://${IPADDRESS}:${PORT}/'`);
         });
-      }
+    }
 
-      // console.log(JSON.stringify(articles)); // Valid JSON
-      article_arr = JSON.stringify(articles);
-      res.send(article_arr);
+    initBodyParser() { 
+        app.use(bodyParser.json()); 
+    }
+    initRoutes() { 
+    }
+    initDB() {
+        this.getTopStories();
+    }
 
-    });
-  });
+    getTopStories() {
+        database.query('SELECT * FROM Customers LIMIT 0, 24')
+        // database.query('SELECT * FROM ARTICLES LIMIT 0, 24')
+        .then(rows => {
+            api.get('/', function (req, res) {
+                console.log(api.mountpath); 
+                res.send(rows);
+            });
 
-server.listen(PORT, () => console.log(` ... node.js server running at ${IPADDRESS}, port ${PORT}`));
+            app.use('/api', api); // mount the api
+            console.log(rows);
+            
+            return database.close();
+        }, err => {
+            return database.close().then(() => { throw err; })
+        })
+        .catch(err => {
+            // handle the error
+            console.error('error getting query: ' + err.stack);
+        });  
+    }
+
+    getSports() {
+        database.query('SELECT Customers.login FROM Customers ORDER BY Customers.login')
+        // database.query('SELECT ARTICLES.headline FROM Customers ORDER BY ARTICLES.date')
+            .then(rows => {
+                api.get('/', function (req, res) {
+                    console.log(api.mountpath);
+                    res.send(rows);
+                });
+
+                app.use('/api/sports', api); 
+                console.log(rows);
+
+                return database.close();
+            }, err => {
+                return database.close().then(() => { throw err; })
+            })
+            .catch(err => {
+                // handle the error
+                console.error('error getting query: ' + err.stack);
+            });  
+    }
+
+
+    searchHeadline(keyword) {
+        let keyword = req.params.keyword;
+        database.query("SELECT * FROM Customers WHERE last_name LIKE ? ", ['%' + keyword + '%'])
+            .then(rows => {
+                api.get('/', function (req, res) {
+                    console.log(api.mountpath);
+                    res.send(rows);
+                });
+
+                app.use('/api/search/:keyword', api);
+                console.log(rows);
+
+                return database.close();
+            }, err => {
+                return database.close().then(() => { throw err; })
+            })
+            .catch(err => {
+                // handle the error
+                console.error('error getting query: ' + err.stack);
+            });
+    }
+
+    searchByDate() {
+        let date = req.params.date;
+        database.query('SELECT * FROM Customers where date=?')
+            // database.query('SELECT * FROM ARTICLES LIMIT 0, 24')
+            .then(rows => {
+                api.get('/', function (req, res) {
+                    console.log(api.mountpath);
+                    res.send(rows);
+                });
+
+                app.use('/api/search/:date', api); 
+                console.log(rows);
+
+                return database.close();
+            }, err => {
+                return database.close().then(() => { throw err; })
+            })
+            .catch(err => {
+                // handle the error
+                console.error('error getting query: ' + err.stack);
+            });
+    }
+   
+
+}
+
+new Server();
