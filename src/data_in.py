@@ -7,9 +7,11 @@ def escape(s):
         return s
 
     ILLEGAL = ['\'', '\"']
+    padding = 0
     for i,c in enumerate(s):
         if c in ILLEGAL:
-            s = s[:i] + '\\' + s[i:]
+            s = s[:i+padding] + '\\' + s[i+padding:]
+            padding = padding+1
     return s
 
 class Story:
