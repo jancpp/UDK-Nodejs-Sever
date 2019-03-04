@@ -209,7 +209,7 @@ def _get_next_results_url(results_url):
     # this substring appears in all urls after the initial one
     if('&app%5B0%5D=editorial' not in results_url):
         # after that the only difference is the final number
-        return results_url + '&app%5B0%5D=editorial&o=10'
+        return results_url + '&app%5B0%5D=editorial&o=50'
     else:
         # increment final number
         # find the '='
@@ -225,7 +225,7 @@ def _get_next_results_url(results_url):
         while index != 0:
             num += (results_url[index])
             index += 1
-        num = str(int(num) + 10)#increment it
+        num = str(int(num) + 50)#increment it
 
         # rewrite that portion of the string.
         results_url = results_url[:firstindex]# slice off the number
