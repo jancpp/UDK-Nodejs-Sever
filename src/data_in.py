@@ -13,13 +13,14 @@ class Story:
 
     #constructor
     # NOTE: MISSING 'SECTION' as in arts-and-culture or sports or whatever
-    def __init__(self, url, main_image, mib, headline, author, date, body):
+    def __init__(self, url, main_image, mib, headline, author, date, category, body):
         self.url = url
         self.main_image = main_image
         self.main_image_byline = mib
         self.headline = headline
         self.author = author
         self.date = date
+        self.category = category
         self.body = body
 
     def __str__(self):
@@ -91,6 +92,9 @@ def _article_to_story(article_url):
     author = _mine_author(article)
     date = _mine_date(article)
 
+    body = soup.find('body')
+    category = mine_category(body)
+
     # optional
     main_image, img_byline = _mine_main_image(article)
     body = _mine_body(article)
@@ -121,12 +125,21 @@ def _mine_main_image(article):
 
 def _mine_headline(article):
     headline_area = article.find('header', class_='asset-header')
-    bad_headline = headline_area.find('h1', itemprop='headline').text
-    return "".join(line.strip() for line in bad_headline.split('\n'))
+    if headline_area == None:
+        raise Exception('Could not find headline area in article.')
+
+    jumbled_headline = headline_area.find('h1', itemprop='headline').text
+    if jumbled_headline == None:
+        raise Exception('Could not find headline in article.')
+
+    return "".join(line.strip() for line in jumbled_headline.split('\n'))
 
 def _mine_author(article):
     headline_area = article.find('header', class_='asset-header')
     author = headline_area.find('span', itemprop='author').text
+    if author == None:
+        raise Exception('Could not find author in headline area.')
+
     return author
 
 def breakdown_date_text(text):
@@ -135,10 +148,29 @@ def breakdown_date_text(text):
 def _mine_date(article):
     headline_area = article.find('header', class_='asset-header')
     text = headline_area.find('meta', itemprop='datePublished')['content']
+    if text == None:
+        raise Exception('Could not find date text in headline area')
+
     year, month, day = breakdown_date_text(text)
     print(year, month, day)
-    date = datetime.date(int(year), int(month), int(day))
-    return date
+    
+    try:
+        date = datetime.date(int(year), int(month), int(day))
+        return date
+    except ValueError as ve:
+        print("Error parsing date: {}".format(ve.args))
+
+    return None
+
+def _mine_category(article):
+    c = body['class']
+    print(c)
+    if "category-sports" in c:
+        print('sports')
+    elif "category-arts-and-culture" in c:
+        print('arts and culture')
+    else:
+        print('no category')
 
 def _mine_body(article):
     body = []

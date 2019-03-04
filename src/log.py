@@ -1,6 +1,3 @@
-
-
-
 class Log():
 
     @classmethod
