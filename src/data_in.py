@@ -93,6 +93,8 @@ def _article_to_story(article_url):
     date = _mine_date(article)
 
     body = soup.find('body')
+    if body == None:
+        raise Exception("Could not find body!")
     category = _mine_category(body)
 
     # optional
@@ -162,7 +164,7 @@ def _mine_date(article):
 
     return None
 
-def _mine_category(article):
+def _mine_category(body):
     c = body['class']
     print(c)
     if "category-sports" in c:
