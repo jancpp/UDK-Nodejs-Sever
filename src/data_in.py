@@ -93,13 +93,13 @@ def _article_to_story(article_url):
     date = _mine_date(article)
 
     body = soup.find('body')
-    category = mine_category(body)
+    category = _mine_category(body)
 
     # optional
     main_image, img_byline = _mine_main_image(article)
     body = _mine_body(article)
 
-    s = Story(escape(article_url), escape(main_image), escape(img_byline), escape(headline), escape(author), date, escape(body))
+    s = Story(escape(article_url), escape(main_image), escape(img_byline), escape(headline), escape(author), date, escape(category), escape(body))
 
     return(s)
 
