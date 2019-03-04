@@ -1,4 +1,6 @@
+
 import React from 'react';
+import axios from 'axios';
 import {
   StyleSheet, Text, View, Image, TextInput, Button, Alert,
   TouchableHighlight, TouchableOpacity, TouchableNativeFeedback,
@@ -18,8 +20,8 @@ export default class Translator extends React.Component {
     };
   }
 
-    componentDidMount() {
-      this.getDefaultData();
+  componentDidMount() {
+    this.getDefaultData();
     // axios.get('http://localhost:3001').then((response) => response.json()).then((list) => {
     //   // axios.get('http://' + SERVERIP + ':3001/api').then((response) => response.json()).then((list) => {
     //   // once the fetch resolves, run the code here
@@ -35,11 +37,14 @@ export default class Translator extends React.Component {
     //   console.log(error);
     // }
     // );
+    console.log("Hello");
   }
 
   getDefaultData = () => {
+    console.log('jan')
     // const url = `https://randomuser.me/api`;
-    const url = `http://10.104.135.50:3001/api`;
+    // const url = `http://10.104.135.50:3001/api`;
+    const url = `http://10.104.135.50:3001/api`; // node server  
     return fetch(url)
       .then((response) => response.json())
       .then((list) => {
@@ -48,21 +53,21 @@ export default class Translator extends React.Component {
           { loading: false, data: list },
           function () { }
         );
-
+        // debugger;
       }).catch((error) => {
         console.log(error);
       }
       );
   }
 
-  renderNativeItem = (item) => {
-    const name = item.first_name + " " + item.last_name;
-    return  <ListItem
-      title={name}
-      subtitle={item.login}
-      onPress={() => this.onPressItem(item)} // goto url?
+  renderTopStories = (item) => {
+    return <ListItem
+      title={item.headline}
+      subtitle={'Category: ' + item.category}
+      onPress={() => this.onPress("google.com")} // goto url?
     />;
   }
+
 
   _onPressButton() {
     Alert.alert("Congratulations on tapping that button!");
@@ -73,88 +78,88 @@ export default class Translator extends React.Component {
   }
 
   render() {
-    
+
     return (
 
       <View>
 
         <Image source={{ uri: "https://bloximages.chicago2.vip.townnews.com/kansan.com/content/tncms/custom/image/74017260-28ae-11e9-ad8e-bb81b20d5180.jpg", height: 64 }} />
-        
+
         <FlatList
           data={this.state.data}
-          renderItem={({ item }) => this.renderNativeItem(item)}
-          // renderItem={function ({ item }) {
-          //   return (
-          //     <Text style={styles.card}>{item.login}</Text>
-          //   );
-          // }}
+          renderItem={({ item }) => this.renderTopStories(item)}
+        // renderItem={function ({ item }) {
+        //   return (
+        //     <Text style={styles.card}>{item.login}</Text>
+        //   );
+        // }}
         />
       </View>
 
-//       <ScrollView >
-//         <View style={{
-//           justifyContent: 'center',
-//           alignItems: 'center'
-//         }}>
-//           <Text style={{ fontSize: 18 }}>{'\nKansas overwhelms short-handed West Virginia roster in 78-53 victory'}</Text>
-//           <Text style={{ fontSize: 10 }}>Maddy Tannahill | @maddytannahill   Feb 16, 2019</Text>
-//           <Image source={{ uri: "https://bloximages.chicago2.vip.townnews.com/kansan.com/content/tncms/assets/v3/editorial/5/54/55450714-3241-11e9-8ca1-8bc32dfb7918/5c689a8b9c949.image.jpg?resize=750%2C968", width: 230, height: 296 }} />
-//           <Text style={{ fontSize: 10 }}>Redshirt sophomore guard K.J. Lawson celebrates after hitting a three against West Virginia. The Jayhawks defeated the Mountaineers 78-53 on Saturday, Feb. 16.</Text>
-//           <Text style={{ fontSize: 10, color: "gray" }}>Chance Parker/KANSAN</Text>
-//           <Text style={{ fontSize: 12 }}>{'\nWorking with a four-point margin over West Virginia, freshman guard Quentin Grimes drove into a Mountaineer-crowded lane. Immediately double-teamed, the freshman dropped off a nasty no-look pass to junior forward Mitch Lightfoot who brought the roof down in Allen Fieldhouse with a massive dunk, extending the lead to 13-7 for the Jayhawks.'}</Text>
-//           <Text style={{ fontSize: 12 }}>{'\nImproving to 9-4 in conference play, the Jayhawks will take a week off before travelling to Lubbock, Texas, to take on Texas Tech in arguably their biggest matchup left in the regular-season schedule.'}</Text>
-//         </View>
-//         <View style={styles.container}>
-//           <TouchableHighlight
-//             onPress={this._onPressButton}
-//             onLongPress={this._onLongPressButton}
-//             underlayColor="white">
-//             <View style={styles.button}>
-//               <Text style={styles.buttonText}>FaceBook</Text>
-//             </View>
-//           </TouchableHighlight>
-//           <TouchableOpacity
-//             onPress={this._onPressButton}>
-//             <View style={styles.button}>
-//               <Text style={styles.buttonText}>Twitter</Text>
-//             </View>
-//           </TouchableOpacity>
-//           <TouchableWithoutFeedback
-//             onPress={this._onPressButton}>
-//             <View style={styles.button}>
-//               <Text style={styles.buttonText}>Email</Text>
-//             </View>
-//           </TouchableWithoutFeedback>
-//           <Button
-//             onPress={this._onPressButton}
-//             title="other"
-//             color="#841584"
-//           />
-//         </View>
-//         <View style={{
-//           //justifyContent: 'center',
-//           //alignItems: 'center',
-//           borderWidth: 5,
-//           borderRadius: 20,
-//           margin: 5
-//         }}>
-//           <Button onPress={this._onPressButton}
-//             title="Headline - Headline - Headline"
-//             color="#000000" />
-//           <View style={{
-//             flex: 1,
-//             flexDirection: 'row',
-//             margin: 10,
-//             alignItems: 'center'
-//           }}>
-//             <Image source={{ uri: "https://bloximages.chicago2.vip.townnews.com/kansan.com/content/tncms/assets/v3/editorial/5/54/55450714-3241-11e9-8ca1-8bc32dfb7918/5c689a8b9c949.image.jpg?resize=750%2C968", width: 86, height: 111 }} />
-//             <Text style={{ fontSize: 12, margin: 4 }}>{"Blah blah blah blah blah blah blah\nBlah blah blah blah blah blah blah\nBlah blah blah blah blah blah blah\nBlah blah blah blah blah blah blah\nBlah blah blah blah blah blah blah\nBlah blah blah blah blah blah blah\n"}</Text>
-//           </View>
-//         </View>
-//       </ScrollView>
+      //       <ScrollView >
+      //         <View style={{
+      //           justifyContent: 'center',
+      //           alignItems: 'center'
+      //         }}>
+      //           <Text style={{ fontSize: 18 }}>{'\nKansas overwhelms short-handed West Virginia roster in 78-53 victory'}</Text>
+      //           <Text style={{ fontSize: 10 }}>Maddy Tannahill | @maddytannahill   Feb 16, 2019</Text>
+      //           <Image source={{ uri: "https://bloximages.chicago2.vip.townnews.com/kansan.com/content/tncms/assets/v3/editorial/5/54/55450714-3241-11e9-8ca1-8bc32dfb7918/5c689a8b9c949.image.jpg?resize=750%2C968", width: 230, height: 296 }} />
+      //           <Text style={{ fontSize: 10 }}>Redshirt sophomore guard K.J. Lawson celebrates after hitting a three against West Virginia. The Jayhawks defeated the Mountaineers 78-53 on Saturday, Feb. 16.</Text>
+      //           <Text style={{ fontSize: 10, color: "gray" }}>Chance Parker/KANSAN</Text>
+      //           <Text style={{ fontSize: 12 }}>{'\nWorking with a four-point margin over West Virginia, freshman guard Quentin Grimes drove into a Mountaineer-crowded lane. Immediately double-teamed, the freshman dropped off a nasty no-look pass to junior forward Mitch Lightfoot who brought the roof down in Allen Fieldhouse with a massive dunk, extending the lead to 13-7 for the Jayhawks.'}</Text>
+      //           <Text style={{ fontSize: 12 }}>{'\nImproving to 9-4 in conference play, the Jayhawks will take a week off before travelling to Lubbock, Texas, to take on Texas Tech in arguably their biggest matchup left in the regular-season schedule.'}</Text>
+      //         </View>
+      //         <View style={styles.container}>
+      //           <TouchableHighlight
+      //             onPress={this._onPressButton}
+      //             onLongPress={this._onLongPressButton}
+      //             underlayColor="white">
+      //             <View style={styles.button}>
+      //               <Text style={styles.buttonText}>FaceBook</Text>
+      //             </View>
+      //           </TouchableHighlight>
+      //           <TouchableOpacity
+      //             onPress={this._onPressButton}>
+      //             <View style={styles.button}>
+      //               <Text style={styles.buttonText}>Twitter</Text>
+      //             </View>
+      //           </TouchableOpacity>
+      //           <TouchableWithoutFeedback
+      //             onPress={this._onPressButton}>
+      //             <View style={styles.button}>
+      //               <Text style={styles.buttonText}>Email</Text>
+      //             </View>
+      //           </TouchableWithoutFeedback>
+      //           <Button
+      //             onPress={this._onPressButton}
+      //             title="other"
+      //             color="#841584"
+      //           />
+      //         </View>
+      //         <View style={{
+      //           //justifyContent: 'center',
+      //           //alignItems: 'center',
+      //           borderWidth: 5,
+      //           borderRadius: 20,
+      //           margin: 5
+      //         }}>
+      //           <Button onPress={this._onPressButton}
+      //             title="Headline - Headline - Headline"
+      //             color="#000000" />
+      //           <View style={{
+      //             flex: 1,
+      //             flexDirection: 'row',
+      //             margin: 10,
+      //             alignItems: 'center'
+      //           }}>
+      //             <Image source={{ uri: "https://bloximages.chicago2.vip.townnews.com/kansan.com/content/tncms/assets/v3/editorial/5/54/55450714-3241-11e9-8ca1-8bc32dfb7918/5c689a8b9c949.image.jpg?resize=750%2C968", width: 86, height: 111 }} />
+      //             <Text style={{ fontSize: 12, margin: 4 }}>{"Blah blah blah blah blah blah blah\nBlah blah blah blah blah blah blah\nBlah blah blah blah blah blah blah\nBlah blah blah blah blah blah blah\nBlah blah blah blah blah blah blah\nBlah blah blah blah blah blah blah\n"}</Text>
+      //           </View>
+      //         </View>
+      //       </ScrollView>
     );
   }
-  
+
 }
 const styles = StyleSheet.create({
   container: {
@@ -181,7 +186,7 @@ const styles = StyleSheet.create({
   }
 });
 
-      
+
 
 
 

@@ -40,8 +40,8 @@ class Server {
     }
 
     getTopStories() {
-        database.query('SELECT * FROM Customers LIMIT 0, 24')
-        // database.query('SELECT * FROM ARTICLES LIMIT 0, 24')
+        // database.query('SELECT * FROM Customers LIMIT 0, 24')
+        database.query('SELECT * FROM ARTICLES LIMIT 0, 24')
         .then(rows => {
             api.get('/', function (req, res) {
                 console.log(api.mountpath); 
@@ -49,7 +49,7 @@ class Server {
             });
 
             app.use('/api', api); // mount the api
-            console.log(rows);
+            // console.log(rows);
             
             return database.close();
         }, err => {
@@ -62,8 +62,8 @@ class Server {
     }
 
     getSports() {
-        database.query('SELECT Customers.login FROM Customers ORDER BY Customers.login')
-        // database.query('SELECT ARTICLES.headline FROM Customers ORDER BY ARTICLES.date')
+        // database.query('SELECT Customers.login FROM Customers ORDER BY Customers.login')
+        database.query('SELECT ARTICLES.headline FROM Customers ORDER BY ARTICLES.date')
             .then(rows => {
                 api.get('/', function (req, res) {
                     console.log(api.mountpath);
@@ -86,7 +86,7 @@ class Server {
 
     searchHeadline(keyword) {
         let keyword = req.params.keyword;
-        database.query("SELECT * FROM Customers WHERE last_name LIKE ? ", ['%' + keyword + '%'])
+        database.query("SELECT * FROM ARTICLES WHERE last_name LIKE ? ", ['%' + keyword + '%'])
             .then(rows => {
                 api.get('/', function (req, res) {
                     console.log(api.mountpath);
@@ -108,7 +108,7 @@ class Server {
 
     searchByDate() {
         let date = req.params.date;
-        database.query('SELECT * FROM Customers where date=?')
+        database.query('SELECT * FROM ARTICLES where date=?')
             // database.query('SELECT * FROM ARTICLES LIMIT 0, 24')
             .then(rows => {
                 api.get('/', function (req, res) {
