@@ -6,7 +6,7 @@ def escape(s):
     if s == None:
         return s
 
-    ILLEGAL = ['\'', '\"']
+    ILLEGAL = ['\'', '\"', '\\']
     padding = 0
     for i,c in enumerate(s):
         if c in ILLEGAL:
