@@ -1,6 +1,6 @@
 import sys
-from data_in import *
-from store import *
+import data_in
+import store
 
 SEARCH_PAGE = 'http://www.kansan.com/search/?s=start_time&sd=asc&l=50&t=article&nsa=eedition'
 
@@ -12,21 +12,42 @@ SEARCH_PAGE = 'http://www.kansan.com/search/?s=start_time&sd=asc&l=50&t=article&
 
 def windup(start):
     place = SEARCH_PAGE
-    for i in range(10):
-        urls = data_in._get_urls(place)
-        print(urls)
-        place = data_in._get_next_results_url(place)
-        print("Next: {}".format(place))
+    urls = data_in._get_urls(place)
+    print(urls)
+    place = data_in._get_next_results_url(place)
+    print("Next: {}".format(place))
+    return urls
 
 
 
 def parse(story_urls):
     print('parse')
+    return None
 
 def put(stories):
     print('put')
+    return None
 
 def start():
-    put(parse(windup(SEARCH_PAGE)))
+    # delete all entries from database
+    store.reset_database()
+
+    urls = []
+    stories = []
+
+    try:
+        urls = windup(SEARCH_PAGE)
+    except Exception as e:
+        print("Something went wrong calling windup in fill: {}".format(e.args))
+
+    try:
+        stories = parse(urls)
+    except Exception as e:
+        print("Something went wrong calling parse in fill: {}".format(e.args))
+    
+    try:
+        put(stories)
+    except Exception as e:
+        print("Something went wrong calling put in fill: {}".format(e.args))
 
 start()
