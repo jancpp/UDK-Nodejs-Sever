@@ -33,7 +33,8 @@ def parse(story_urls):
     return None
 
 def put(stories):
-    print('put')
+    for story in stories:
+        store.put_story(story)
     return None
 
 def start():

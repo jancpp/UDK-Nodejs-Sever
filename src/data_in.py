@@ -3,6 +3,9 @@ import requests
 import datetime
 
 def escape(s):
+    if s == None:
+        return s
+
     ILLEGAL = ['\'', '\"']
     for i,c in enumerate(s):
         if c in ILLEGAL:
@@ -32,7 +35,7 @@ class Story:
 
         s += "\nHeadline:\t" + self.headline
         s += "\nAuthor:\t" + self.author
-        s += "\nDate:\t" + self.date
+        s += "\nDate:\t" + str(self.date)
         s += "\nBody:\t" + self.body
 
         return s
@@ -64,10 +67,16 @@ def _get_urls(search_url):
     article_urls = []
     html_article = requests.get(search_url).text
     soup = BeautifulSoup(html_article, 'lxml')      # lxml parameter?
+    articles = soup.find_all('article')
 
-    articles = soup.find_all('h3', class_='tnt-headline')
+    #remove print edition articles
     for article in articles:
-        article_url = article.find('a')['href']
+        if 'tnt-section-print-edition' in article['class']:
+            articles.remove(article)
+
+    for article in articles:
+        header = article.find('h3', class_='tnt-headline')
+        article_url = header.find('a')['href']
         story_url = 'http://www.kansan.com' + article_url
         article_urls.append(story_url)
 
@@ -89,19 +98,29 @@ def _article_to_story(article_url):
 
     # required
     headline = _mine_headline(article)
+    print("got headline")
     author = _mine_author(article)
+    print("got author")
     date = _mine_date(article)
+    print("got date")
 
     body = soup.find('body')
     if body == None:
         raise Exception("Could not find body!")
     category = _mine_category(body)
+    print("got category")
 
     # optional
     main_image, img_byline = _mine_main_image(article)
+    print("got image")
     body = _mine_body(article)
+    print("got body")
+
+    print("done mining")
 
     s = Story(escape(article_url), escape(main_image), escape(img_byline), escape(headline), escape(author), date, escape(category), escape(body))
+
+    print("constructed story")
 
     return(s)
 
