@@ -21,6 +21,14 @@ def windup(start):
 
 
 def parse(story_urls):
+    stories = []
+    for url in story_urls:
+        s = data_in.get_story(url)
+        print("\n\nStory: {}\n\n".format(s))
+        stories.append(s)
+    return stories
+            
+
     print('parse')
     return None
 
