@@ -1,49 +1,20 @@
+
 const router = require('express').Router();
+var articles = require('../controller/controller');
 
-router.get('/sports', (req, res) => {
-    let obj = {
-        message: 'This is a sports ROUTE',
-    };
+router.route('/top')
+    .get(articles.topStories);
+    // .post(articles.createArticle);
 
-    res.status(200).send(obj);
-});
+router.route('/opinion')
+    .get(articles.opinions);
 
-module.exports = router;
+router.route('/sports')
+    .get(articles.sports);
 
-
-// an atempt to post data on server
-// router.post('/addArticle', (req, res) => {
-//     const { id, url,
-//          headline, author, date, main_image, body } = req.body;
-
-//     let newArticle = new Article({
-//         id,
-//         url,
-//         headline,
-//         author,
-//         date,
-//         main_image,
-//         body
-//     });
-
-//     newArticle
-//         .save()
-//         .then(article => {
-//             if (!article) {
-//                 return res.status(400).send();
-//                 console.log('article not saved');
-//             }
-//             return res.status(201).send(article);
-//         })
-//         .catch(err => {
-//             if (err) {
-//                 console.log(err);
-//                 return res.status(400).send({ error: err });
-//             }
-//             console.log('error');
-//             return res.status(400).send();
-//         });
-// });
+router.route('/')
+    .get(articles.all)
+    .post(articles.createNew);
 
 
 module.exports = router;
