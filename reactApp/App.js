@@ -21,43 +21,35 @@ export default class Translator extends React.Component {
   }
 
   componentDidMount() {
-    this.getDefaultData();
-    // axios.get('http://localhost:3001').then((response) => response.json()).then((list) => {
-    //   // axios.get('http://' + SERVERIP + ':3001/api').then((response) => response.json()).then((list) => {
-    //   // once the fetch resolves, run the code here
-    //   console.log(list);
-
-    //   // not loading anymore, and we have some new data, the list of card objects we got from the json
-    //   this.setState(
-    //     { loading: false, cards: list },
-    //     function () { }
-    //   );
-
-    // }).catch((error) => {
-    //   console.log(error);
-    // }
-    // );
-    console.log("Hello");
+    this.asyncData();
   }
 
-  getDefaultData = () => {
-    console.log('jan')
-    // const url = `https://randomuser.me/api`;
-    // const url = `http://10.104.135.50:3001/api`;
-    const url = `http://10.104.135.50:3001/api`; // node server  
-    return fetch(url)
+  async getData() {
+    fetch(`http://104.248.235.9:3001/api`)
       .then((response) => response.json())
       .then((list) => {
         // not loading anymore, and we have some new data, the list of card objects we got from the json
+        console.log(list);
+
         this.setState(
           { loading: false, data: list },
           function () { }
         );
-        // debugger;
       }).catch((error) => {
         console.log(error);
-      }
-      );
+      });
+  }
+
+ async  asyncData() {
+  // fetch data from a url endpoint
+  let response = await axios.get("http://104.248.235.9:3001/api");
+   console.log(response);
+  let list = response.data;
+   console.log(list);
+
+   return this.setState(
+     { loading: false, data: list }
+   );
   }
 
   renderTopStories = (item) => {
