@@ -7,7 +7,7 @@ def put_story(s):
 
     try:
         db = mysql.connector.connect(host="localhost", user="remote", password="sugarsugar", database="UDK")
-        cursor = db.MySQLCursorPrepared()
+        cursor = db.cursor(prepared=True)
         q = """INSERT INTO ARTICLES (url, headline, author, date, main_image, main_image_byline, body, category) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"""
         input = (s.url, s.headline, s.author, s.date, s.main_image, s.main_image_byline, s.body, s.category)
         print(q)
