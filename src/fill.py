@@ -4,8 +4,8 @@ import store
 
 SEARCH_PAGE = 'http://www.kansan.com/search/?s=start_time&sd=asc&l=50&t=article&nsa=eedition'
 
-# windup:   get search results until we fail or run out, write to a file
-# parse:    given search results file, parse the articles until we fail, and store them in a file
+# windup:   get search results until we fail or run out
+# parse:    given search results file, parse the articles until we fail
 # put:      take parsed stories and store them in database
 
 # option x: do all of the previous in sequence
