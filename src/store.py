@@ -4,6 +4,7 @@ import mysql.connector
 from mysql.connector.cursor import MySQLCursorPrepared
 
 def put_story(s):
+    print("trying to put story: {}".format(str(s))
 
     try:
         db = mysql.connector.connect(host="localhost", user="remote", password="sugarsugar", database="UDK")
@@ -11,6 +12,7 @@ def put_story(s):
         q = """INSERT INTO ARTICLES (url, headline, author, date, main_image, main_image_byline, body, category) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"""
         input = (s.url, s.headline, s.author, s.date, s.main_image, s.main_image_byline, s.body, s.category)
         print(q)
+        print(input)
 
         cursor.execute(q, input)
         db.commit()

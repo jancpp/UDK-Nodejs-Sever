@@ -31,13 +31,12 @@ class Story:
     def __str__(self):
         s = ""
         s += "\nUrl:\t" + self.url
-
-        if(self.main_image is not None):
-            s += "\nMain_Image:\n" + self.main_image
-
         s += "\nHeadline:\t" + self.headline
         s += "\nAuthor:\t" + self.author
         s += "\nDate:\t" + str(self.date)
+
+        s += ( ("\nCategory:\t" + self.category) if (self.category is not None) else ("\nCategory:\tNone") )
+        s += ( ("\nMain Image:\t" + self.main_image) if (self.main_image is not None) else ("\Main Image:\tNone") )
         s += "\nBody:\t" + self.body
 
         return s
@@ -96,33 +95,22 @@ def _article_to_story(article_url):
     soup = BeautifulSoup(source, 'lxml')
     article = soup.find('article')
     
-    print("mining story ", article_url)
 
     # required
     headline = _mine_headline(article)
-    print("got headline")
     author = _mine_author(article)
-    print("got author")
     date = _mine_date(article)
-    print("got date")
-
-    body = soup.find('body')
-    if body == None:
-        raise Exception("Could not find body!")
-    category = _mine_category(body)
-    print("got category")
 
     # optional
     main_image, img_byline = _mine_main_image(article)
-    print("got image")
     body = _mine_body(article)
-    print("got body")
+    category_area = soup.find('body')
+    if category_area == None:
+        raise Exception("Could not find category_area (body of html doc)!")
+    category = _mine_category(category_area)
 
-    print("done mining")
-
-    s = Story(escape(article_url), escape(main_image), escape(img_byline), escape(headline), escape(author), date, escape(category), escape(body))
-
-    print("constructed story")
+    s = Story(article_url, main_image, img_byline, headline, author, date, category, body)
+    print("constructed story\n")
 
     return(s)
 
@@ -175,7 +163,6 @@ def _mine_date(article):
         raise Exception('Could not find date text in headline area')
 
     year, month, day = breakdown_date_text(text)
-    print(year, month, day)
     
     try:
         date = datetime.date(int(year), int(month), int(day))
@@ -208,7 +195,7 @@ def _mine_body(article):
             body.append(atext)
 
         elif (child.name == 'div') and ('inline-image' in child['class']):
-            # TODO: Get the byline of the image, but how to store?? as a double?
+            # TODO: Get the byline of the image, but how to store??
             imgsrc = '$$$IMAGE$$$' + child.find('meta', itemprop='contentUrl')['content']
             body.append(imgsrc)
         elif child.name == 'blockquote':
