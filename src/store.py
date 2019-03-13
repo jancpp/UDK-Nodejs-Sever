@@ -4,7 +4,7 @@ import mysql.connector
 from mysql.connector.cursor import MySQLCursorPrepared
 
 def put_story(s):
-    print("trying to put story: {}".format(str(s))
+    print("trying to put story: {}".format(s))
 
     try:
         db = mysql.connector.connect(host="localhost", user="remote", password="sugarsugar", database="UDK")
