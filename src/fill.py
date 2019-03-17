@@ -22,9 +22,12 @@ def windup(start):
     for url in urls:
         print(url)
 
-    if any('print_edition' in url for url in urls):
-        urls.remove(url)
-        print('missed print edition: {}'.format(url))
+    g_urls = []
+    for url in urls:
+        if 'print_edition' not in url:
+            g_urls.append(url)
+        else:
+            print('missed: {}'.format(url))
 
     for url in urls:
         if 'kappa-sigma' in url:
