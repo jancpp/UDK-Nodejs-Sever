@@ -8,7 +8,7 @@ def put_story(s):
     print("trying to put story: {}".format(s))
 
     try:
-        db = mysql.connector.connect(host="localhost", user="remote", password="sugarsugar", database="UDK")
+        db = mysql.connector.connect(host="localhost", user="remote", password="sugarsugar", database="UDK", use_pure=True)
         cursor = db.cursor(cursor_class=MySQLCursorPrepared)
         q = """INSERT INTO ARTICLES (url, headline, author, date, main_image, main_image_byline, body, category) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"""
         input = (s.url, s.headline, s.author, s.date.strftime("%Y/%m/%d"), s.main_image, s.main_image_byline, s.body, s.category)
