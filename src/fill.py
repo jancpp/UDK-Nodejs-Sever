@@ -14,7 +14,7 @@ def windup(start):
     urls = []
     searches = []   # just for bookkeeping
     place = SEARCH_PAGE
-    for i in range(10):
+    for i in range(100):
         urls += data_in._get_urls(place)
         searches.append(place)
         place = data_in._get_next_results_url(place)
