@@ -89,7 +89,7 @@ def _get_urls(search_url):
 # params: <String> url of article
 # return: <Story> parsed article
 def _article_to_story(article_url):
-
+    print("mining: {}".format(article_url))
     source = requests.get(article_url).text
     soup = BeautifulSoup(source, 'lxml')
     article = soup.find('article')
