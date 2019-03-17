@@ -71,6 +71,7 @@ def _get_urls(search_url):
 
     #remove print edition articles
     for article in articles:
+        print(article['class'])
         if 'tnt-section-print-edition' in article['class']:
             articles.remove(article)
 
