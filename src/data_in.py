@@ -97,16 +97,26 @@ def _article_to_story(article_url):
 
     # required
     headline = _mine_headline(article)
+    print('got headline')
     author = _mine_author(article)
+    print('got author')
     date = _mine_date(article)
+    print('got date')
+
 
     # optional
     main_image, img_byline = _mine_main_image(article)
+    print('got image info')
+
     body = _mine_body(article)
+    print('got body')
+
     category_area = soup.find('body')
     if category_area == None:
         raise Exception("Could not find category_area (body of html doc)!")
     category = _mine_category(category_area)
+    print('got category')
+
 
     s = Story(article_url, main_image, img_byline, headline, author, date, category, body)
     print("constructed story\n")
