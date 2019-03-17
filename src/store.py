@@ -14,15 +14,16 @@ def put_story(s):
         input = (s.url, s.headline, s.author, s.date.strftime("%Y/%m/%d"), s.main_image, s.main_image_byline, s.body, s.category)
         print(q)
         print(input)
-
+        print("setup")
         cursor.execute(q, input)
+        print("executed")
         db.commit()
 
         print("Stored successfully!")
     except mysql.connector.Error as err:
         print("Something went wrong calling put_story in store: {}".format(err))
     except NotImplementedError as err:
-        print("Something went wrong calling put_story in store: {}".format(err))
+        print("Caught NotImplementedError calling put_story in store: {}".format(err))
     except:
         print("Unexpected error: ", sys.exc_info()[0])
 
