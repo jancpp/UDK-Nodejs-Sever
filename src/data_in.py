@@ -129,23 +129,21 @@ def _article_to_story(article_url):
     return(s)
 
 def _mine_main_image(article):
+    img = None
+    img_byline = None
+
     img_area = article.find('div', id='asset-photo')
     
-    if(img_area is None):
-        return None, None
+    if(img_area is not None):
+        img = img_area.find('meta', itemprop='contentUrl')['content']
+        
+        img_byline = img_area.find('figcaption', class_='caption')
+        if(img_byline.find('p') is not None):
+            img_byline = img_byline.find('p').text
+        elif(img_byline.find('span', class_='tnt-byline') is not None):
+            img_byline = img_byline.find('span', class_='tnt-byline').text
 
-    img = img_area.find('meta', itemprop='contentUrl')['content']
-
-    if(img is None):
-        return None, None
-
-    img_byline = img_area.find('figcaption', class_='caption').find('p').text
-
-    if(img_byline is None):
-        return img, None
-
-    else:
-        return img, img_byline
+    return img, img_byline
      
 
 def _mine_headline(article):
