@@ -202,6 +202,8 @@ def _mine_body(article):
             print('\n\n***DEBUG*** Tweet located.\n')
             tweet_url = '$$$TWEET$$$' + child.find_all('a')[-1]['href']
             body.append(tweet_url)
+        elif (child.name == 'ul') and ('bullet' in child['class']):
+            print('DO SOMETHING WITH BULLETED LIST - RIGHT NOW WE SKIP')
             
         else:
             print("UNMATCHED ELEMENT IN ARTICLE BODY", child)
