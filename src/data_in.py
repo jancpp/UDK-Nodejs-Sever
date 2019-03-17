@@ -36,7 +36,7 @@ class Story:
         s += "\nDate:\t" + str(self.date)
 
         s += ( ("\nCategory:\t" + self.category) if (self.category is not None) else ("\nCategory:\tNone") )
-        s += ( ("\nMain Image:\t" + self.main_image) if (self.main_image is not None) else ("\n\Main Image:\tNone") )
+        s += ( ("\nMain Image:\t" + self.main_image) if (self.main_image is not None) else ("\nMain Image:\tNone") )
         s += "\nBody:\t" + self.body
 
         return s
