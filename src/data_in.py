@@ -36,7 +36,7 @@ class Story:
         s += "\nDate:\t" + str(self.date)
 
         s += ( ("\nCategory:\t" + self.category) if (self.category is not None) else ("\nCategory:\tNone") )
-        s += ( ("\nMain Image:\t" + self.main_image) if (self.main_image is not None) else ("\Main Image:\tNone") )
+        s += ( ("\nMain Image:\t" + self.main_image) if (self.main_image is not None) else ("\n\Main Image:\tNone") )
         s += "\nBody:\t" + self.body
 
         return s
@@ -202,7 +202,7 @@ def _mine_body(article):
             print('\n\n***DEBUG*** Tweet located.\n')
             tweet_url = '$$$TWEET$$$' + child.find_all('a')[-1]['href']
             body.append(tweet_url)
-        elif (child.name == 'ul') and ('bullet' in child['class']):
+        elif child.name == 'ul':
             print('DO SOMETHING WITH BULLETED LIST - RIGHT NOW WE SKIP')
             
         else:
