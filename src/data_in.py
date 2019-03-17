@@ -73,6 +73,7 @@ def _get_urls(search_url):
     for article in articles:
         print(article['class'])
         if 'tnt-section-print-edition' in article['class']:
+            print("removed: {}".format(article.find('h3', class_='tnt-headline')))
             articles.remove(article)
 
     for article in articles:
