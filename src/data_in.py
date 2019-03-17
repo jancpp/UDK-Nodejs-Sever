@@ -17,7 +17,6 @@ def escape(s):
 class Story:
 
     #constructor
-    # NOTE: MISSING 'SECTION' as in arts-and-culture or sports or whatever
     def __init__(self, url, main_image, mib, headline, author, date, category, body):
         self.url = url
         self.main_image = main_image

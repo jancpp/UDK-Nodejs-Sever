@@ -11,11 +11,18 @@ SEARCH_PAGE = 'http://www.kansan.com/search/?s=start_time&sd=asc&l=50&t=article&
 # option x: do all of the previous in sequence
 
 def windup(start):
+    urls = []
+    searches = []   # just for bookkeeping
     place = SEARCH_PAGE
-    urls = data_in._get_urls(place)
-    print(urls)
-    place = data_in._get_next_results_url(place)
-    print("Next: {}".format(place))
+    for i in range(10):
+        urls += data_in._get_urls(place)
+        searches.append(place)
+        place = data_in._get_next_results_url(place)
+
+    for url in urls:
+        print(url)
+
+    print('windup')
     return urls
 
 
@@ -24,17 +31,17 @@ def parse(story_urls):
     stories = []
     for url in story_urls:
         s = data_in.get_story(url)
-        print("\n\nStory: {}\n\n".format(s))
         stories.append(s)
     return stories
             
-
     print('parse')
     return None
 
 def put(stories):
     for story in stories:
         store.put_story(story)
+
+    print('put')
     return None
 
 def start():
