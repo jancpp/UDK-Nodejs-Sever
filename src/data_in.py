@@ -75,12 +75,15 @@ def _get_urls(search_url):
         if 'tnt-section-print-edition' in article['class']:
             print("removed: {}".format(article.find('h3', class_='tnt-headline')))
             articles.remove(article)
+    
 
     for article in articles:
         header = article.find('h3', class_='tnt-headline')
         article_url = header.find('a')['href']
         story_url = 'http://www.kansan.com' + article_url
         article_urls.append(story_url)
+
+    
 
     # get next results url ??
     #button_soup = soup.find('div', class_='pagination-container')

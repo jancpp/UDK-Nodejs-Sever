@@ -22,6 +22,11 @@ def windup(start):
     for url in urls:
         print(url)
 
+    for url in urls:
+        if 'print_edition' in url:
+            urls.remove(url)
+            print('missed print edition: {}'.format(url))
+
     print('windup')
     return urls
 
