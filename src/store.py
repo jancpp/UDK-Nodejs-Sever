@@ -15,7 +15,7 @@ def put_story(s):
         print(q)
         print(input)
         print("setup")
-        cursor.execute(q, input)
+        cursor.execute(q, params=input)
         print("executed")
         db.commit()
 
@@ -23,6 +23,8 @@ def put_story(s):
     except mysql.connector.Error as err:
         print("Something went wrong calling put_story in store: {}".format(err))
     except NotImplementedError as err:
+        if db.warning_count > 0:
+            print(cursor._fetch_warnings())
         print("Caught NotImplementedError calling put_story in store: {}".format(err))
     except:
         print("Unexpected error: ", sys.exc_info()[0])
