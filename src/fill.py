@@ -27,6 +27,10 @@ def windup(start):
             urls.remove(url)
             print('missed print edition: {}'.format(url))
 
+    for url in urls:
+        if 'kappa-sigma' in url:
+            print('missed kappa-sigma: {}'.format(url))
+
     print('windup')
     return urls
 
