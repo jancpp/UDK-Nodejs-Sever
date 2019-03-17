@@ -22,7 +22,7 @@ def put_story(s):
     except mysql.connector.Error as err:
         print("Something went wrong calling put_story in store: {}".format(err))
     except:
-        print("Unexpected error: " sys.exc_info()[0])
+        print("Unexpected error: ", sys.exc_info()[0])
 
 def reset_database():
     try:
