@@ -21,6 +21,8 @@ def put_story(s):
         print("Stored successfully!")
     except mysql.connector.Error as err:
         print("Something went wrong calling put_story in store: {}".format(err))
+    except NotImplementedError as err:
+        print("Something went wrong calling put_story in store: {}".format(err))
     except:
         print("Unexpected error: ", sys.exc_info()[0])
 
