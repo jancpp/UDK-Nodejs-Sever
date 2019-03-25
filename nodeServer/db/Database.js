@@ -1,5 +1,6 @@
 const config = require('./config.js');
 const mysql = require('mysql');
+const logger = require('../logs/log');
 
 class Database {
     constructor() {

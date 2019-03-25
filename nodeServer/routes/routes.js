@@ -1,6 +1,7 @@
 
 const router = require('express').Router();
-var articles = require('../controller/controller');
+const articles = require('../controller/controller');
+const logger = require('../logs/log');
 
 router.route('/top')
     .get(articles.topStories);

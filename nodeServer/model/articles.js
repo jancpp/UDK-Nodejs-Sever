@@ -1,15 +1,17 @@
 
+const logger = require('../logs/log');
 const Database = require('../db/Database');
 const db = new Database();
 
 
-function Article(id = 0, url = '', headline = '', author = '', date = 2000-01-01, main_image = '', body = '', category = '') {
+function Article(id = 0, url = '', headline = '', author = '', date = 2000 - 01 - 01, main_image = '', main_image_byline = '', body = '', category = '') {
     this.id = id; 
     this.url = url; 
     this.headline = headline; 
     this.author = author; 
-    this.date = date; 
-    this.main_image = main_image; 
+    this.date = date;
+    this.main_image = main_image;
+    this.main_image_byline = main_image_byline; 
     this.body = body; 
     this.category = category; 
 }
@@ -22,6 +24,7 @@ Article.getTopStories = function (result) {
         if (err) {
             db.close().then(() => { throw err; })
             console.log("error: ", err);
+            logger.info('error getting query: ' + err.stack);
             result(null, err);
         }
         else {
@@ -35,11 +38,9 @@ Article.getOpinions = function (result) {
     db.query(q, function (err, res) {
 
         if (err) {
-            db.close().then(() => { throw err; }).catch(err => {
-                // handle the error
-                console.error('error getting query: ' + err.stack);
-            });  
+            db.close().then(() => { throw err; })
             console.log("error: ", err);
+            logger.info('error getting query: ' + err.stack);
             result(null, err);
         }
         else {
@@ -55,6 +56,7 @@ Article.getSports = function (result) {
         if (err) {
             db.close().then(() => { throw err; })
             console.log("error: ", err);
+            logger.info('error getting query: ' + err.stack);
             result(null, err);
         }
         else {
@@ -64,12 +66,13 @@ Article.getSports = function (result) {
 };
 
 Article.getAllArticles = function (result) {
-    q = "SELECT * FROM ARTICLES LIMIT 0, 1000";
+    q = "SELECT * FROM ARTICLES ORDER BY Date DESC LIMIT 0, 1000";
     db.query(q, function (err, res) {
 
         if (err) {
             db.close().then(() => { throw err; })
             console.log("error: ", err);
+            logger.info('error getting query: ' + err.stack);
             result(null, err);
         }
         else {
@@ -85,11 +88,11 @@ Article.createArticle = function (newArticle, result) {
         if (err) {
             db.close().then(() => { throw err; })
             console.log("error: ", err);
+            logger.info('error getting query: ' + err.stack);
             result(null, err);
         }
         else {
-            console.log(res.id);
-            result(null, res.id);
+            result(null, res);
         }
     });
 };
