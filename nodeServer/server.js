@@ -9,7 +9,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const http = require('http');
 const routes = require('./routes/routes');
-const logger = require('../logs/log');
+const logger = require('./logs/log');
 const interval = 5 * 60 * 1000; // 5 minutes
 
 class Server {
