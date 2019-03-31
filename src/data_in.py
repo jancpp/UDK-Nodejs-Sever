@@ -78,6 +78,8 @@ def _get_urls(search_url):
     print(search_url)
     article_urls = []
     html_article = requests.get(search_url).text
+    print(html_article)
+    
     soup = BeautifulSoup(html_article, 'lxml')      # lxml parameter?
     articles = soup.find_all('article')
 
