@@ -68,7 +68,7 @@ def _get_urls(search_url):
     html_article = requests.get(search_url).text
     soup = BeautifulSoup(html_article, 'lxml')      # lxml parameter?
     articles = soup.find_all('article')
-
+    
     #remove print edition articles
     for article in articles:
         print(article['class'])
@@ -136,7 +136,7 @@ def _mine_main_image(article):
     
     if(img_area is not None):
         img = img_area.find('meta', itemprop='contentUrl')['content']
-        
+
         img_byline = img_area.find('figcaption', class_='caption')
         if(img_byline.find('p') is not None):
             img_byline = img_byline.find('p').text
