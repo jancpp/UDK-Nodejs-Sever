@@ -68,7 +68,7 @@ def _get_urls(search_url):
     html_article = requests.get(search_url).text
     soup = BeautifulSoup(html_article, 'lxml')      # lxml parameter?
     articles = soup.find_all('article')
-    
+
     #remove print edition articles
     for article in articles:
         print(article['class'])
@@ -188,11 +188,11 @@ def _mine_category(body):
     c = body['class']
     print(c)
     if "category-sports" in c:
-        print('sports')
+        return 'sports'
     elif "category-arts-and-culture" in c:
-        print('arts and culture')
+        return 'arts'
     else:
-        print('no category')
+        return 'none'
 
 def _mine_body(article):
     body = []
