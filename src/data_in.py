@@ -113,16 +113,19 @@ def _article_to_story(article_url):
         print('got headline')
     except Exception e:
         debug.warn(e.what(), " article url: article_url")
+        raise(e)
     try:
         author = _mine_author(article)
         print('got author')
     except Exception e:
         debug.warn(e.what(), " article url: article_url")
+        raise(e)
     try:
         date = _mine_date(article)
         print('got date')
     except Exception e:
         debug.warn(e.what(), " article url: article_url")
+        raise(e)
 
 
     # optional
@@ -131,12 +134,14 @@ def _article_to_story(article_url):
         print('got image info')
     except Exception e:
         debug.warn(e.what(), " article url: article_url")
+        raise(e)
 
     try:
         body = _mine_body(article)
         print('got body')
     except Exception e:
         debug.warn(e.what(), " article url: article_url")
+        raise(e)
 
     category_area = soup.find('body')
     if category_area == None:
