@@ -1,6 +1,12 @@
+import datetime
+import logging
 from bs4 import BeautifulSoup
 import requests
-import datetime
+
+today_date_str = datetime.date.today().__str__()
+datain_logfile = "./log/datain/" + today_date_str + ".log"
+
+logging.basicConfig(filename=datain_logfile, level=logging.DEBUG)
 
 def escape(s):
     if s == None:
@@ -51,6 +57,7 @@ def list_stories(search_url):
 # params: <String> url of search page
 # return: <List<Story>> results of search
 def get_stories(search_url):
+    debug.info("Getting stories from search url: ", search_url)
     search_stories = []
     for art in _get_urls(search_url):
         search_stories.append(_article_to_story(art))
@@ -101,23 +108,44 @@ def _article_to_story(article_url):
     
 
     # required
-    headline = _mine_headline(article)
-    print('got headline')
-    author = _mine_author(article)
-    print('got author')
-    date = _mine_date(article)
-    print('got date')
+    try:
+        headline = _mine_headline(article)
+        print('got headline')
+    except Exception as e:
+        debug.warn(e.what(), " article url: article_url")
+        raise(e)
+    try:
+        author = _mine_author(article)
+        print('got author')
+    except Exception as e:
+        debug.warn(e.what(), " article url: article_url")
+        raise(e)
+    try:
+        date = _mine_date(article)
+        print('got date')
+    except Exception as e:
+        debug.warn(e.what(), " article url: article_url")
+        raise(e)
 
 
     # optional
-    main_image, img_byline = _mine_main_image(article)
-    print('got image info')
+    try:
+        main_image, img_byline = _mine_main_image(article)
+        print('got image info')
+    except Exception as e:
+        debug.warn(e.what(), " article url: article_url")
+        raise(e)
 
-    body = _mine_body(article)
-    print('got body')
+    try:
+        body = _mine_body(article)
+        print('got body')
+    except Exception as e:
+        debug.warn(e.what(), " article url: article_url")
+        raise(e)
 
     category_area = soup.find('body')
     if category_area == None:
+        debug.warn("Unable to locate a category for story from story url: ", article_url)
         raise Exception("Could not find category_area (body of html doc)!")
     category = _mine_category(category_area)
     print('got category')
@@ -254,4 +282,5 @@ def _get_next_results_url(results_url):
         # rewrite that portion of the string.
         results_url = results_url[:firstindex]# slice off the number
         results_url += num# add the new one
+        debug.info("Next search url is: ", results_url)
         return(results_url)
