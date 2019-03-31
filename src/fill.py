@@ -2,7 +2,7 @@ import sys
 import data_in
 import store
 
-SEARCH_PAGE = 'http://www.kansan.com/search/?s=start_time&sd=asc&l=50&t=article&nsa=eedition'
+FILL_CONFIG_FILE = 'fill.config'
 
 # windup:   get search results until we fail or run out
 # parse:    given search results file, parse the articles until we fail
@@ -40,9 +40,13 @@ def put(stories):
         store.put_story(story)
     print('put')
 
+def bookmark_fill(place):
+        f = open(FILL_CONFIG_FILE, 'w')
+        f.write(search_page)
+
 def start():
     # store.reset_database()
-    f = open('fill.config')
+    f = open(FILL_CONFIG_FILE)
     search_page = f.readline()
     f.close()
 
@@ -54,8 +58,7 @@ def start():
             urls = windup(search_page)
         except Exception as e:
             print("Something went wrong calling windup in fill: {}".format(e.args))
-            f = open('fill.config', 'w')
-            f.write(search_page)
+            bookmark_fill(search_page)
             break
         
         if len(urls) == 0:
@@ -65,16 +68,18 @@ def start():
             stories = parse(urls)
         except Exception as e:
             print("Something went wrong calling parse in fill: {}".format(e.args))
-            f = open('fill.config', 'w')
-            f.write(search_page)
+            bookmark_fill(search_page)
             break
 
         try:
             put(stories)
         except Exception as e:
             print("Something went wrong calling put in fill: {}".format(e.args))
-            f = open('fill.config', 'w')
-            f.write(search_page)
+            bookmark_fill(search_page)
             break
+        
+        bookmark_fill(search_page)
+
+        
 
 start()
