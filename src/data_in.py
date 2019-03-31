@@ -62,7 +62,7 @@ def list_stories(search_url):
 # params: <String> url of search page
 # return: <List<Story>> results of search
 def get_stories(search_url):
-    debug.info("Getting stories from search url: ", search_url)
+    logger.info("Getting stories from search url: ", search_url)
     search_stories = []
     for art in _get_urls(search_url):
         search_stories.append(_article_to_story(art))
@@ -114,17 +114,17 @@ def _article_to_story(article_url):
     try:
         headline = _mine_headline(article)
     except Exception as e:
-        debug.warn(e.what(), " article url: {}".format(article_url))
+        logger.warn(e.what(), " article url: {}".format(article_url))
         raise(e)
     try:
         author = _mine_author(article)
     except Exception as e:
-        debug.warn(e.what(), " article url: {}".format(article_url))
+        logger.warn(e.what(), " article url: {}".format(article_url))
         raise(e)
     try:
         date = _mine_date(article)
     except Exception as e:
-        debug.warn(e.what(), " article url: {}".format(article_url))
+        logger.warn(e.what(), " article url: {}".format(article_url))
         raise(e)
 
 
@@ -132,18 +132,18 @@ def _article_to_story(article_url):
     try:
         main_image, img_byline = _mine_main_image(article)
     except Exception as e:
-        debug.warn(e.what(), " article url: {}".format(article_url))
+        logger.warn(e.what(), " article url: {}".format(article_url))
         raise(e)
 
     try:
         body = _mine_body(article)
     except Exception as e:
-        debug.warn(e.what(), " article url: {}".format(article_url))
+        logger.warn(e.what(), " article url: {}".format(article_url))
         raise(e)
 
     category_area = soup.find('body')
     if category_area == None:
-        debug.warn("Unable to locate a category for story from story url: ", article_url)
+        logger.warn("Unable to locate a category for story from story url: ", article_url)
         raise Exception("Could not find category_area (body of html doc)!")
     category = _mine_category(category_area)
 
@@ -274,5 +274,5 @@ def _get_next_results_url(results_url):
         # rewrite that portion of the string.
         results_url = results_url[:firstindex]# slice off the number
         results_url += num# add the new one
-        debug.info("Next search url is: ", results_url)
+        logger.info("Next search url is: ", results_url)
         return(results_url)
