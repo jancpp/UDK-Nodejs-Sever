@@ -46,7 +46,7 @@ def bookmark_fill(place):
         f.close()
 
 def start():
-    # store.reset_database()
+    store.reset_database()
     f = open(FILL_CONFIG_FILE)
     search_page = f.readline()
     f.close()
@@ -79,8 +79,9 @@ def start():
             print("Something went wrong calling put in fill: {}".format(e.args))
             bookmark_fill(search_page)
             break
-        
+
         bookmark_fill(search_page)
+        search_page = data_in._get_next_results_url(search_page)
 
         
 
