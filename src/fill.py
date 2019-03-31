@@ -11,7 +11,7 @@ SEARCH_PAGE = 'http://www.kansan.com/search/?s=start_time&sd=asc&l=50&t=article&
 # option x: do all of the previous in sequence
 
 def windup(start):
-    urls += data_in._get_urls(place)
+    urls = data_in._get_urls(start)
 
     # filter print edition (again)
     g_urls = []
