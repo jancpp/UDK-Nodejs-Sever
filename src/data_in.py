@@ -77,10 +77,8 @@ def get_stories(search_url):
 def _get_urls(search_url):
     print(search_url)
     article_urls = []
-    html_article = requests.get(search_url).text
-    print(html_article)
-    
-    soup = BeautifulSoup(html_article, 'lxml')      # lxml parameter?
+    html_article = requests.get(search_url)
+    soup = BeautifulSoup(html_article.text, 'lxml')      # lxml parameter?
     articles = soup.find_all('article')
 
     #remove print edition articles
