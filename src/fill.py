@@ -12,7 +12,7 @@ FILL_CONFIG_FILE = 'fill.config'
 
 def windup(start):
     urls = data_in._get_urls(start)
-
+    print(urls)
     # filter print edition (again)
     g_urls = []
     for url in urls:
@@ -42,7 +42,8 @@ def put(stories):
 
 def bookmark_fill(place):
         f = open(FILL_CONFIG_FILE, 'w')
-        f.write(search_page)
+        f.write(place)
+        f.close()
 
 def start():
     # store.reset_database()
@@ -62,6 +63,7 @@ def start():
             break
         
         if len(urls) == 0:
+            print("no urls found!")
             break
 
         try:

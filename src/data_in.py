@@ -5,10 +5,14 @@ import requests
 
 # Configure data_in logger
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
 today_date_str = datetime.date.today().__str__()
 datain_logfile = "log/datain/" + today_date_str + ".log"
-logger.basicConfig(filename=datain_logfile, level=logging.DEBUG)
 
+fh = logging.FileHandler(datain_logfile)
+#logger.basicConfig(filename=datain_logfile, level=logging.DEBUG)
+logger.addHandler(fh)
 def escape(s):
     if s == None:
         return s
@@ -71,7 +75,7 @@ def get_stories(search_url):
 # return: <List<String>> article urls
 # desc:   _get_urls works on the search results page of the UDK, this function is for building our database.
 def _get_urls(search_url):
-
+    print(search_url)
     article_urls = []
     html_article = requests.get(search_url).text
     soup = BeautifulSoup(html_article, 'lxml')      # lxml parameter?
