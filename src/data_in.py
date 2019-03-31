@@ -79,9 +79,8 @@ def _get_urls(search_url):
 
     #remove print edition articles
     for article in articles:
-        print(article['class'])
         if 'tnt-section-print-edition' in article['class']:
-            print("removed: {}".format(article.find('h3', class_='tnt-headline')))
+            logger.info("removing: {}".format(article.find('h3', class_='tnt-headline')))
             articles.remove(article)
     
 
@@ -102,7 +101,6 @@ def _get_urls(search_url):
 # params: <String> url of article
 # return: <Story> parsed article
 def _article_to_story(article_url):
-    print("mining: {}".format(article_url))
     source = requests.get(article_url).text
     soup = BeautifulSoup(source, 'lxml')
     article = soup.find('article')
@@ -111,37 +109,32 @@ def _article_to_story(article_url):
     # required
     try:
         headline = _mine_headline(article)
-        print('got headline')
     except Exception as e:
-        debug.warn(e.what(), " article url: article_url")
+        debug.warn(e.what(), " article url: {}".format(article_url))
         raise(e)
     try:
         author = _mine_author(article)
-        print('got author')
     except Exception as e:
-        debug.warn(e.what(), " article url: article_url")
+        debug.warn(e.what(), " article url: {}".format(article_url))
         raise(e)
     try:
         date = _mine_date(article)
-        print('got date')
     except Exception as e:
-        debug.warn(e.what(), " article url: article_url")
+        debug.warn(e.what(), " article url: {}".format(article_url))
         raise(e)
 
 
     # optional
     try:
         main_image, img_byline = _mine_main_image(article)
-        print('got image info')
     except Exception as e:
-        debug.warn(e.what(), " article url: article_url")
+        debug.warn(e.what(), " article url: {}".format(article_url))
         raise(e)
 
     try:
         body = _mine_body(article)
-        print('got body')
     except Exception as e:
-        debug.warn(e.what(), " article url: article_url")
+        debug.warn(e.what(), " article url: {}".format(article_url))
         raise(e)
 
     category_area = soup.find('body')
@@ -149,11 +142,9 @@ def _article_to_story(article_url):
         debug.warn("Unable to locate a category for story from story url: ", article_url)
         raise Exception("Could not find category_area (body of html doc)!")
     category = _mine_category(category_area)
-    print('got category')
 
 
     s = Story(article_url, main_image, img_byline, headline, author, date, category, body)
-    print("constructed story\n")
 
     return(s)
 
@@ -209,13 +200,12 @@ def _mine_date(article):
         date = datetime.date(int(year), int(month), int(day))
         return date
     except ValueError as ve:
-        print("Error parsing date: {}".format(ve.args))
+        logger.warn("Error parsing date: {}".format(ve.args))
 
     return None
 
 def _mine_category(body):
     c = body['class']
-    print(c)
     if "category-sports" in c:
         return 'sports'
     elif "category-arts-and-culture" in c:
@@ -236,19 +226,16 @@ def _mine_body(article):
             body.append(atext)
 
         elif (child.name == 'div') and ('inline-image' in child['class']):
-            # TODO: Get the byline of the image, but how to store??
             imgsrc = '$$$IMAGE$$$' + child.find('meta', itemprop='contentUrl')['content']
             body.append(imgsrc)
+
         elif child.name == 'blockquote':
-            print('\n\n***DEBUG*** Tweet located.\n')
             tweet_url = '$$$TWEET$$$' + child.find_all('a')[-1]['href']
             body.append(tweet_url)
-        elif child.name == 'ul':
-            print('DO SOMETHING WITH BULLETED LIST - RIGHT NOW WE SKIP')
-            
-        else:
-            print("UNMATCHED ELEMENT IN ARTICLE BODY", child)
 
+        elif child.name == 'ul':
+            print("skipped list")
+            
     b = ""
     for body_elem in body:
         b += body_elem
