@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 
 today_date_str = datetime.date.today().__str__()
-datain_logfile "./log/datain/" + today_date_str + ".log"
+datain_logfile = "./log/datain/" + today_date_str + ".log"
 
 logging.basicConfig(filename=datain_logfile, level=logging.DEBUG)
 
