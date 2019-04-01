@@ -1,5 +1,5 @@
 // server.js
-// start server: 'nodemon server' or 'node server'
+// to start server: 'forever start server' or 'nodemon server' or 'node server'
 
 const PORT = process.env.port || 3001; // to change port (export PORT=1234)
 const ip = require('ip');
@@ -20,17 +20,15 @@ class Server {
     }
 
     start() {
-        
         var server = http.createServer(app);
         app.set('port', process.env.PORT || PORT);
         server.listen(PORT, IPADDRESS, () => {
             console.log(`server running at 'http://${IPADDRESS}:${PORT}/'`);
         });
-
+        // update data on api every x minutes
         setInterval(
             () => {
                 this.updateApi();
-                console.log('updated api (every 5 min)');
             },
             interval
         );

@@ -1,16 +1,14 @@
-# Node js server
+# nodeServer
 
-This server needs to be running constantly.
+first run:
+npm install
 
-It is fetching data/articles from MySQL database and broadcasting them on API, about every 5 minutes (so mobile devices can read from it).
-
-To start node js server:
-forever start /nodeServer/server.js
-
-To stop node js server:
-forever stop /nodeServer/server.js
-
-To restart node js server:
-forever restart /nodeServer/server.js
+then:
+forever start server.js
+or
+forever restart server.js
+or
+nodemon server.js or node server.js
 
 
+Server IP: 104.248.235.9  

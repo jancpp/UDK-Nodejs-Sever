@@ -1,3 +1,4 @@
+// routes.js
 
 const router = require('express').Router();
 const articles = require('../controller/controller');
@@ -14,8 +15,6 @@ router.route('/sports')
     .get(articles.sports);
 
 router.route('/')
-    .get(articles.all)
-    .post(articles.createNew);
-
+    .get(articles.all);
 
 module.exports = router;

@@ -1,7 +1,10 @@
 
+// articles.js
+
 const logger = require('../logs/log');
-const Database = require('../db/Database');
-const db = new Database();
+const config = require('./config.js');
+const mysql = require('mysql');
+const pool = mysql.createPool(config);
 
 
 function Article(id = 0, url = '', headline = '', author = '', date = 2000 - 01 - 01, main_image = '', main_image_byline = '', body = '', category = '') {
@@ -17,15 +20,15 @@ function Article(id = 0, url = '', headline = '', author = '', date = 2000 - 01 
 }
 
 
-Article.getTopStories = function (result) {
+Article.getTopStories = (result) => {
     q = "SELECT * FROM ARTICLES LIMIT 0, 40";
-    db.query(q, function (err, res) {
+    pool.query(q, (err, res) => {
 
         if (err) {
-            db.close().then(() => { throw err; })
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(null, err);
+            throw err;
         }
         else {
             result(null, res);
@@ -33,15 +36,15 @@ Article.getTopStories = function (result) {
     });
 };
 
-Article.getOpinions = function (result) {
+Article.getOpinions = (result) => {
     q = "SELECT * FROM ARTICLES WHERE CATEGORY='Opinion' LIMIT 0, 40";
-    db.query(q, function (err, res) {
+    pool.query(q, (err, res) => {
 
         if (err) {
-            db.close().then(() => { throw err; })
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(null, err);
+            throw err;
         }
         else {
             result(null, res);
@@ -49,15 +52,15 @@ Article.getOpinions = function (result) {
     });
 };
 
-Article.getSports = function (result) {
+Article.getSports = (result) => {
     q = "SELECT * FROM ARTICLES WHERE CATEGORY='Sports' LIMIT 0, 40";
-    db.query(q, function (err, res) {
+    pool.query(q, (err, res) => {
 
         if (err) {
-            db.close().then(() => { throw err; })
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(null, err);
+            throw err;
         }
         else {
             result(null, res);
@@ -65,15 +68,15 @@ Article.getSports = function (result) {
     });
 };
 
-Article.getAllArticles = function (result) {
+Article.getAllArticles = (result) => {
     q = "SELECT * FROM ARTICLES ORDER BY Date DESC LIMIT 0, 1000";
-    db.query(q, function (err, res) {
+    pool.query(q, (err, res) => {
 
         if (err) {
-            db.close().then(() => { throw err; })
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(null, err);
+            throw err;
         }
         else {
             result(null, res);
@@ -81,15 +84,32 @@ Article.getAllArticles = function (result) {
     });
 };
 
-Article.createArticle = function (newArticle, result) {
-    q = "INSERT INTO ARTICLES SET ?";
-    db.query(q, newArticle, function (err, res) {
+Article.searchArticlesByKeyword = (result) => {
+    q = "SELECT * FROM ARTICLES WHERE ARTICLES.HEADLINE LIKE ? ";
+    let keyword = req.params.keyword;
+    pool.query(q, ['%' + keyword + '%'], (err, res) => {
 
         if (err) {
-            db.close().then(() => { throw err; })
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(null, err);
+            throw err;
+        }
+        else {
+            result(null, res);
+        }
+    });
+};
+
+Article.createArticle = (newArticle, result) => {
+    q = "INSERT INTO ARTICLES SET ?";
+    pool.query(q, (err, res) => {
+
+        if (err) {
+            console.log("error: ", err);
+            logger.info('error getting query: ' + err.stack);
+            result(null, err);
+            throw err;
         }
         else {
             result(null, res);

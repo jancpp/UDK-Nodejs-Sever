@@ -1,11 +1,11 @@
-var Article = require('../model/articles');
+var Article = require('../db/articles');
 const logger = require('../logs/log');
 
 exports.topStories = (req, res) => {
     Article.getTopStories( (err, rows) => {
         // console.log('controller')
         if (err) {
-            res.send(err);
+            res.status(404).send(err);
             console.log('top stories: request failed');
         } else {
             // console.log('res', rows);
@@ -18,7 +18,7 @@ exports.topStories = (req, res) => {
 exports.opinions = (req, res) => {
     Article.getOpinions((err, rows) => {
         if (err) {
-            res.send(err);
+            res.status(404).send(err);
             console.log('opinions: request failed');
         } else {
             console.log('opinions request');
@@ -31,7 +31,7 @@ exports.opinions = (req, res) => {
 exports.sports = (req, res) => {
     Article.getSports((err, rows) => {
         if (err) {
-            res.send(err);
+            res.status(404).send(err);
             console.log('sports: request failed');
         } else {
             console.log('sports request');
@@ -43,7 +43,7 @@ exports.sports = (req, res) => {
 exports.all = (req, res) => {
     Article.getAllArticles((err, rows) => {
         if (err) {
-            res.send(err);
+            res.status(404).send(err);
             console.log('all articles: request failed');
         } else {
             console.log('all articles request');
@@ -52,31 +52,46 @@ exports.all = (req, res) => {
     })
 };
 
-exports.createNew = (req, res) => {
-        var newArticle = new Article(
-            req.id,
-            req.url,
-            req.headline,
-            req.author,
-            req.date,
-            req.main_image,
-            req.main_image_byline,
-            req.body,
-            req.category
-            );
+// exports.searchByKey = (req, res) => {
+//     Article.searchArticlesByKeyword((err, rows) => {
+//         if (err) {
+//             res.status(404).send(err);
+//             console.log('search by keyword failed');
+//         } else {
+//             console.log('article by keyword request');
+//             res.send(rows);
+//         }
+//     })
+// };
+const mysql = require('mysql');
+const pool = mysql.createPool({
+    connectionLimit: 10,
+    host: 'mysql.eecs.ku.edu',
+    database: 'jpolzer',
+    user: 'jpolzer',
+    password: 'P@$$word123'});
 
-        //handles null error 
-        if (!newArticle.article || !newArticle.status) {
-            res.status(400).send({ error: true, message: 'Please provide article/status' });
-            logger.info('error creating new article ');
-        }
-        else {
-            Article.createArticle(newArticle, function (err, article) {
-                console.log(article.date);
-                console.log(article.id);
-                if (err)
-                    res.send(err);
-                res.json(article);
-            });
-        }
-    };
+exports.searchByKey = (req, res) => {
+    let keyword = req.query.headline;
+    // pool.query("SELECT * FROM ARTICLES WHERE ARTICLES.HEADLINE LIKE ? ", ['%' + keyword + '%'], (error, results, fields) => {
+
+    pool.query("SELECT * FROM ARTICLES WHERE ARTICLES.HEADLINE='KU swim and dive head into uncharted territory in Big 12 Championships'", (error, results, fields) => { //, ['%' + keyword + '%'],  (error, results, fields) => {
+        if (error) throw error;
+        return res.send({ results });
+    });
+};
+
+// exports.searchByKey =  (req, res, next) => {
+//     var sql = "SELECT * FROM ARTICLES WHERE ARTICLES.HEADLINE LIKE ? ";
+//     key = res.para
+
+//     pool.query(
+//         sql,
+//         existingParams.map(field => req.query[field]),
+//         function (error, results, fields) {
+//             res.json({ "status": 200, "error": null, "response": results });
+//         }
+//     );
+// };
+   
+
