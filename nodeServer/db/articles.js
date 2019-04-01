@@ -21,7 +21,7 @@ function Article(id = 0, url = '', headline = '', author = '', date = 2000 - 01 
 
 
 Article.getTopStories = (result) => {
-    q = "SELECT * FROM ARTICLES LIMIT 0, 40";
+    q = "SELECT * FROM ARTICLES ORDER BY DATE DESC LIMIT 0, 40";
     pool.query(q, (err, res) => {
 
         if (err) {
@@ -37,7 +37,7 @@ Article.getTopStories = (result) => {
 };
 
 Article.getOpinions = (result) => {
-    q = "SELECT * FROM ARTICLES WHERE CATEGORY='Opinion' LIMIT 0, 40";
+    q = "SELECT * FROM ARTICLES WHERE CATEGORY='Opinion' ORDER BY DATE DESC LIMIT 0, 40";
     pool.query(q, (err, res) => {
 
         if (err) {
@@ -53,7 +53,7 @@ Article.getOpinions = (result) => {
 };
 
 Article.getSports = (result) => {
-    q = "SELECT * FROM ARTICLES WHERE CATEGORY='Sports' LIMIT 0, 40";
+    q = "SELECT * FROM ARTICLES WHERE CATEGORY='Sports' ORDER BY DATE DESC LIMIT 0, 40";
     pool.query(q, (err, res) => {
 
         if (err) {
@@ -69,7 +69,7 @@ Article.getSports = (result) => {
 };
 
 Article.getAllArticles = (result) => {
-    q = "SELECT * FROM ARTICLES ORDER BY Date DESC LIMIT 0, 1000";
+    q = "SELECT * FROM ARTICLES ORDER BY DATE DESC LIMIT 0, 1000";
     pool.query(q, (err, res) => {
 
         if (err) {
@@ -100,41 +100,5 @@ Article.searchArticlesByKeyword = (result) => {
         }
     });
 };
-
-Article.createArticle = (newArticle, result) => {
-    q = "INSERT INTO ARTICLES SET ?";
-    pool.query(q, (err, res) => {
-
-        if (err) {
-            console.log("error: ", err);
-            logger.info('error getting query: ' + err.stack);
-            result(null, err);
-            throw err;
-        }
-        else {
-            result(null, res);
-        }
-    });
-};
- 
-// Article.prototype.getSports = function (count = 25) {
-//     return `SELECT * FROM ARTICLES WHERE CATEGORY="Sports" LIMIT 0, ${count - 1}`;
-// }
-
-// Article.prototype.getOpinions = function (count = 25) {
-//     return `SELECT * FROM ARTICLES WHERE CATEGORY="Opinions" LIMIT 0, ${count - 1}`;
-// }
-
-// Article.prototype.getEverything = function() {
-//     return`SELECT * FROM ARTICLES`; 
-// }
-
-// Article.prototype.getStoryById = function (id) {
-//     return `DELETE FROM ARTICLES WHERE ID = ${id}`;
-// }
-
-// Article.prototype.getStoryByKeyword = function (word) {
-//     return `DELETE FROM ARTICLES WHERE HEADLINE = ${word}`;
-// }
 
 module.exports = Article; 
