@@ -1,31 +1,32 @@
-var Article = require('../db/articles');
-const logger = require('../logs/log');
+// controller.js
+
+const Article = require('../db/articles');
 
 exports.topStories = (req, res) => {
     Article.getTopStories( (err, rows) => {
-        // console.log('controller')
         if (err) {
             res.status(404).send(err);
             console.log('top stories: request failed');
         } else {
-            // console.log('res', rows);
             console.log('top stories request');
             res.send(rows);
         }
     }) 
 };
 
-exports.opinions = (req, res) => {
-    Article.getOpinions((err, rows) => {
+exports.news = (req, res) => {
+    Article.getNews((err, rows) => {
         if (err) {
             res.status(404).send(err);
-            console.log('opinions: request failed');
+            console.log('news: request failed');
         } else {
-            console.log('opinions request');
+            console.log('news request');
             res.send(rows);
         }
     })
 };
+
+
 
 
 exports.sports = (req, res) => {
@@ -40,13 +41,76 @@ exports.sports = (req, res) => {
     })
 };
 
-exports.all = (req, res) => {
-    Article.getAllArticles((err, rows) => {
+
+exports.arts = (req, res) => {
+    Article.getArts((err, rows) => {
         if (err) {
             res.status(404).send(err);
-            console.log('all articles: request failed');
+            console.log('arts: request failed');
         } else {
-            console.log('all articles request');
+            console.log('arts request');
+            res.send(rows);
+        }
+    })
+};
+
+exports.opinion = (req, res) => {
+    Article.getOpinion((err, rows) => {
+        if (err) {
+            res.status(404).send(err);
+            console.log('opinion: request failed');
+        } else {
+            console.log('opinion request');
+            res.send(rows);
+        }
+    })
+};
+
+exports.chalk = (req, res) => {
+    Article.getChalk((err, rows) => {
+        if (err) {
+            res.status(404).send(err);
+            console.log('chalk: request failed');
+        } else {
+            console.log('chalk request');
+            res.send(rows);
+        }
+    })
+};
+
+
+exports.multimedia = (req, res) => {
+    Article.getMultimedia((err, rows) => {
+        if (err) {
+            res.status(404).send(err);
+            console.log('multimedia: request failed');
+        } else {
+            console.log('multimedia request');
+            res.send(rows);
+        }
+    })
+};
+
+
+exports.specials = (req, res) => {
+    Article.getSpecials((err, rows) => {
+        if (err) {
+            res.status(404).send(err);
+            console.log('specials: request failed');
+        } else {
+            console.log('specials request');
+            res.send(rows);
+        }
+    })
+};
+
+exports.all = (req, res) => {
+    Article.getEverything((err, rows) => {
+        if (err) {
+            res.status(404).send(err);
+            console.log('everything: request failed');
+        } else {
+            console.log('everything request');
             res.send(rows);
         }
     })

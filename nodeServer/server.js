@@ -1,5 +1,8 @@
 // server.js
-// to start server: 'forever start server' or 'nodemon server' or 'node server'
+// to start server: 'forever start server' (highly recommended)
+// to restart server: 'forever restart server' 
+// to test 'nodemon server' or 'node server' or 'node server &' 
+// (if EADDRINUSE error, you need to find PID and kill process)
 
 const PORT = process.env.port || 3001; // to change port (export PORT=1234)
 const ip = require('ip');
@@ -9,7 +12,6 @@ const app = express();
 const bodyParser = require('body-parser');
 const http = require('http');
 const routes = require('./routes/routes');
-const logger = require('./logs/log');
 const interval = 5 * 60 * 1000; // 5 minutes
 
 class Server {
