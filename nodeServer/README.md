@@ -1,13 +1,13 @@
 # nodeServer
 
-first run:
+#### first run:
 npm install
 
-then:
+#### then:
 forever start server.js
-or
+#### or
 forever restart server.js
-or
+#### or
 nodemon server.js or node server.js
 
 
