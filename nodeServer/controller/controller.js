@@ -51,3 +51,18 @@ exports.all = (req, res) => {
         }
     })
 };
+
+exports.searchByKey = (req, res) => {
+    let keyword = req.query.headline;
+    Article.searchArticlesByKeyword((err, rows) => {
+        if (err) {
+            res.status(404).send(err, keyword);
+            console.log('search by keyword: request failed');
+        } else {
+            console.log('search by keyword request');
+            res.send(rows);
+        }
+    }, keyword)
+};
+
+

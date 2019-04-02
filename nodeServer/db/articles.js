@@ -1,8 +1,8 @@
 
-// articles.js
-
 const logger = require('../logs/log');
 const config = require('./config.js');
+// const Database = require('../db/Database');
+// const db = new Database();
 const mysql = require('mysql');
 const pool = mysql.createPool(config);
 
@@ -84,11 +84,10 @@ Article.getAllArticles = (result) => {
     });
 };
 
-Article.searchArticlesByKeyword = (result) => {
-    q = "SELECT * FROM ARTICLES WHERE ARTICLES.HEADLINE LIKE ? ";
-    let keyword = req.params.keyword;
-    pool.query(q, ['%' + keyword + '%'], (err, res) => {
-
+Article.searchArticlesByKeyword = (result, keyword) => {
+    q = "SELECT * FROM ARTICLES WHERE ARTICLES.HEADLINE LIKE LOWER('%" + keyword + "%') ORDER BY DATE DESC LIMIT 0, 40";
+    
+    pool.query(q , (err, res) => {
         if (err) {
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);

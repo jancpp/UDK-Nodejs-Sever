@@ -1,4 +1,3 @@
-// routes.js
 
 const router = require('express').Router();
 const articles = require('../controller/controller');
@@ -16,5 +15,8 @@ router.route('/sports')
 
 router.route('/')
     .get(articles.all);
+
+router.route('/search?')
+    .get(articles.searchByKey);
 
 module.exports = router;

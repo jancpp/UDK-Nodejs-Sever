@@ -8,5 +8,4 @@ const config = {
     password: 'sugarsugar'
 };
 
-
 module.exports = config;

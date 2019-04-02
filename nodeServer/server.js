@@ -20,6 +20,7 @@ class Server {
     }
 
     start() {
+        
         var server = http.createServer(app);
         app.set('port', process.env.PORT || PORT);
         server.listen(PORT, IPADDRESS, () => {
