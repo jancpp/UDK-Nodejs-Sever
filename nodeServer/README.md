@@ -1,18 +1,32 @@
-# nodeServer
+# Node js server
 
-#### before the first run:
-npm install
+This server needs to be running constantly.
 
-#### to start:
-forever start server.js (highly recommended)
-#### to restart
-forever restart server.js
-#### or
-nodemon server.js or node server.js  
-- if EADDRINUSE error, you need to find PID and kill process  
+It is fetching data/articles from MySQL database and broadcasting them on API, about every 5 minutes (so mobile devices can read from it).
 
-Server login credentials are in db/config.js:
-IP: 104.248.235.9  
-port: 3001    
+To start node js server:
+"forever start /nodeServer/server.js"
 
-## All mobile devices are looking for ip and port! If these are changed, they must be also changed in AppStore applications and Google Play applications
+To stop node js server:
+"forever stop /nodeServer/server.js"
+
+To restart node js server:
+"forever restart /nodeServer/server.js"
+
+
+Also: 
+EADDRINUSE error means something is running on the port you are trying to use: 
+- if it is forever, use restart option above 
+- if still the same error:
+find PID (process id):  
+"netstat -nlp | grep 3001" 
+then kill the process:    
+"kill -9 PID "
+then start server:   
+"forever start /nodeServer/server.js"  
+
+Note:
+if you ever change port number, you need to change it on all connecting mobile devices (means change it in AppStore and Google Play)
+
+
+
