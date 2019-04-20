@@ -12,11 +12,13 @@ const app = express();
 const bodyParser = require('body-parser');
 const http = require('http');
 const routes = require('./routes/routes');
-const interval = 5 * 60 * 1000; // 5 minutes
+const helmet = require('helmet'); // protection from vulnerabilities
+const INTERVAL = 5 * 60 * 1000; // 5 minutes
 
 class Server {
     constructor() {
         this.initBodyParser();
+        this.initHelmet();
         this.initRoutes();
         this.start();
     }
@@ -33,12 +35,16 @@ class Server {
             () => {
                 this.updateApi();
             },
-            interval
+            INTERVAL
         );
     }
 
-    initBodyParser() { 
-        app.use(bodyParser.json()); 
+    initHelmet() {
+        app.use(helmet());
+    }
+
+    initBodyParser() {
+        app.use(bodyParser.json());
     }
 
     initRoutes() { 

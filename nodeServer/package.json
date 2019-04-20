@@ -12,6 +12,8 @@
     "app-root-path": "^2.2.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "forever": "^1.0.0",
+    "helmet": "^3.16.0",
     "ip": "^1.1.5",
     "mysql": "^2.16.0",
     "promise-mysql": "^3.3.1",
