@@ -1,7 +1,7 @@
 // articles.js
 
 const MAX_REQUEST = 1000;  // amount of articles in query
-const DEFAULT_REQUEST = 250; // amount of articles in query
+const DEFAULT_REQUEST = 200; // amount of articles in query
 const logger = require('../logs/log');
 const config = require('./config.js');
 const mysql = require('mysql');
@@ -26,7 +26,7 @@ Article.getTopStories = (result) => {
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(err, null);
-            throw err;
+            return;
         }
         else {
             result(null, res);
@@ -41,7 +41,7 @@ Article.getNews = (result) => {
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(err, null);
-            throw err;
+            return;
         }
         else {
             result(null, res);
@@ -56,7 +56,7 @@ Article.getSports = (result) => {
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(err, null);
-            throw err;
+            return;
         }
         else {
             result(null, res);
@@ -71,7 +71,7 @@ Article.getArts = (result) => {
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(err, null);
-            throw err;
+            return;
         }
         else {
             result(null, res);
@@ -86,7 +86,7 @@ Article.getOpinion = (result) => {
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(err, null);
-            throw err;
+            return;
         }
         else {
             result(null, res);
@@ -101,7 +101,7 @@ Article.getChalk = (result) => {
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(err, null);
-            throw err;
+            return;
         }
         else {
             result(null, res);
@@ -116,7 +116,7 @@ Article.getMultimedia = (result) => {
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(err, null);
-            throw err;
+            return;
         }
         else {
             result(null, res);
@@ -131,7 +131,7 @@ Article.getSpecials = (result) => {
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(err, null);
-            throw err;
+            return;
         }
         else {
             result(null, res);
@@ -146,7 +146,7 @@ Article.getEverything = (result) => {
             console.log("error: ", err);
             logger.info('error getting query: ' + err.stack);
             result(err, null);
-            throw err;
+            return;
         }
         else {
             result(null, res);
@@ -156,7 +156,7 @@ Article.getEverything = (result) => {
 
 Article.searchArticlesByKeyword = (result, searchString) => {
     let keywords = searchString.toString().replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, " ").split(" ");
-    keywords.filter(word => word.length > 2);
+    keywords.filter(word => word.length > 1);
     let n_keywords = keywords.length;
 
     if (n_keywords == 1) {
@@ -166,7 +166,7 @@ Article.searchArticlesByKeyword = (result, searchString) => {
                 console.log("error: ", err);
                 logger.info('error getting query: ' + err.stack);
                 result(err, null);
-                throw err;
+                return;
             }
             else {
                 result(null, res);
@@ -180,7 +180,7 @@ Article.searchArticlesByKeyword = (result, searchString) => {
                 console.log("error: ", err);
                 logger.info('error getting query: ' + err.stack);
                 result(err, null);
-                throw err;
+                return;
             }
             else {
                 result(null, res);
@@ -194,7 +194,7 @@ Article.searchArticlesByKeyword = (result, searchString) => {
                 console.log("error: ", err);
                 logger.info('error getting query: ' + err.stack);
                 result(err, null);
-                throw err;
+                return;
             }
             else {
                 result(null, res);
