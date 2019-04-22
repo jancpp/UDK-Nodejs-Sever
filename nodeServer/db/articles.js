@@ -1,6 +1,6 @@
 // articles.js
 
-const MAX_REQUEST = 1000;  // amount of articles in query
+const MAX_REQUEST = 8000;  // amount of articles in query
 const DEFAULT_REQUEST = 200; // amount of articles in query
 const logger = require('../logs/log');
 const config = require('./config.js');
@@ -154,9 +154,8 @@ Article.getEverything = (result) => {
     });
 };
 
-Article.searchArticlesByKeyword = (result, searchString) => {
-    let keywords = searchString.toString().replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, " ").split(" ");
-    keywords.filter(word => word.length > 1);
+Article.searchArticlesByKeyword = (result, keywords) => {
+
     let n_keywords = keywords.length;
 
     if (n_keywords == 1) {
@@ -172,8 +171,7 @@ Article.searchArticlesByKeyword = (result, searchString) => {
                 result(null, res);
             }
         });
-    }
-    else if (n_keywords == 2) {
+    } else if (n_keywords == 2) {
         q = "SELECT * FROM ARTICLES WHERE ARTICLES.HEADLINE LIKE LOWER( ? ) AND ARTICLES.HEADLINE LIKE LOWER( ? ) ORDER BY DATE DESC LIMIT 0, ?";
         pool.query(q, ['%' + keywords[0] + '%', '%' + keywords[1] + '%', MAX_REQUEST], (err, res) => {
             if (err) {
@@ -186,8 +184,7 @@ Article.searchArticlesByKeyword = (result, searchString) => {
                 result(null, res);
             }
         });
-    }
-    else if (n_keywords > 2) {
+    } else if (n_keywords > 2) {
         q = "SELECT * FROM ARTICLES WHERE ARTICLES.HEADLINE LIKE LOWER( ? ) AND ARTICLES.HEADLINE LIKE LOWER( ? ) AND ARTICLES.HEADLINE LIKE LOWER( ? ) ORDER BY DATE DESC LIMIT 0, ?";
         pool.query(q, ['%' + keywords[0] + '%', '%' + keywords[1] + '%', '%' + keywords[2] + '%', MAX_REQUEST], (err, res) => {
             if (err) {
