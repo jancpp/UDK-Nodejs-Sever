@@ -27,6 +27,9 @@ router.route('/multimedia')
 router.route('/specials')
     .get(articles.specials);
 
+router.route('/onthehill')
+    .get(articles.specials);
+
 router.route('/')
     .get(articles.all);
 

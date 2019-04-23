@@ -78,7 +78,6 @@ exports.chalk = (req, res) => {
     })
 };
 
-
 exports.multimedia = (req, res) => {
     Article.getMultimedia((err, rows) => {
         if (err) {
@@ -91,8 +90,19 @@ exports.multimedia = (req, res) => {
     })
 };
 
-
 exports.specials = (req, res) => {
+    Article.getSpecials((err, rows) => {
+        if (err) {
+            res.status(404).send(err);
+            console.log('specials: request failed');
+        } else {
+            console.log('specials request');
+            res.send(rows);
+        }
+    })
+};
+
+exports.onthehill = (req, res) => {
     Article.getSpecials((err, rows) => {
         if (err) {
             res.status(404).send(err);

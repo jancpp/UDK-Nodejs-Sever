@@ -139,6 +139,22 @@ Article.getSpecials = (result) => {
     });
 };
 
+Article.getSpecials = (result) => {
+    q = "SELECT * FROM ARTICLES WHERE CATEGORY='onthehill' ORDER BY DATE DESC LIMIT 0, ?";
+    pool.query(q, [DEFAULT_REQUEST], (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            logger.info('error getting query: ' + err.stack);
+            result(err, null);
+            return;
+        }
+        else {
+            result(null, res);
+        }
+    });
+};
+
+// This query should be used only for testing
 Article.getEverything = (result) => {
     q = "SELECT * FROM ARTICLES ORDER BY DATE DESC LIMIT 0, ?";
     pool.query(q, [MAX_REQUEST], (err, res) => {
