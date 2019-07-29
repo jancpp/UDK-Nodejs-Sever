@@ -1,4 +1,6 @@
-# Node js server
+# Node js server for my senior project at KU   
+
+### Instuctions  
 
 This server needs to be running constantly.
 
