@@ -10,8 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "app-root-path": "^2.2.0",
-    "body-parser": "^1.18.3",
-    "express": "^4.16.4",
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
     "forever": "^1.0.0",
     "helmet": "^3.16.0",
     "ip": "^1.1.5",
